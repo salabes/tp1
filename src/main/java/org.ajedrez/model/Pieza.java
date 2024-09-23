@@ -1,3 +1,5 @@
+package org.ajedrez.model;
+
 public abstract class Pieza {
 
     public Integer color;

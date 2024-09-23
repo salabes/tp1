@@ -1,3 +1,5 @@
+package org.ajedrez.model;
+
 public class Rey extends Pieza{
     public Rey(Integer color){
         super(color);

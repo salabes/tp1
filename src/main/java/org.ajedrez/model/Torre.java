@@ -1,3 +1,5 @@
+package org.ajedrez.model;
+
 public class Torre extends Pieza {
     public Torre (Integer color){
         super(color);

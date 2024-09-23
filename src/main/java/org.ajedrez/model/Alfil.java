@@ -1,3 +1,4 @@
+package org.ajedrez.model;
 
 import java.util.stream.IntStream;
 

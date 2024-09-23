@@ -1,4 +1,5 @@
 import java.io.ObjectInputFilter.Config;
+package org.ajedrez.model;
 
 public class Peon extends Pieza{
     public Peon(Integer color) {
