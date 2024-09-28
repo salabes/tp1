@@ -1,69 +1,96 @@
 package org.ajedrez.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.GridPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import org.ajedrez.model.Pieza;
+import org.ajedrez.model.Tablero;
+import org.ajedrez.view.PiezaView;
 
 public class TableroController {
     @FXML
     private GridPane gridPane;
 
+    private Tablero tablero;
+    private ImageView piezaSeleccionada;
+    private double offsetX;
+    private double offsetY;
+
     @FXML
     public void initialize() {
-        // Crear el tablero 8x8 con colores alternos
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                Rectangle square = new Rectangle(50, 50);
-                square.setFill((row + col) % 2 == 0 ? Color.WHITESMOKE : Color.SADDLEBROWN);
-                gridPane.add(square, col, row); // Añadir a la GridPane
-            }
-        }
-
-        // Colocar las piezas en sus posiciones iniciales
+        tablero = new Tablero();
+        inicializarTablero();
         inicializarPiezas();
     }
 
+    private void inicializarTablero() {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                gridPane.add(PiezaView.crearCasilla(row, col), col, row);
+            }
+        }
+    }
+
     private void inicializarPiezas() {
-        // Agregar piezas negras al tablero
-        agregarPieza("torre_negra.png", 0, 0);
-        agregarPieza("caballo_negro.png", 0, 1);
-        agregarPieza("alfil_negro.png", 0, 2);
-        agregarPieza("reina_negra.png", 0, 3);
-        agregarPieza("rey_negro.png", 0, 4);
-        agregarPieza("alfil_negro.png", 0, 5);
-        agregarPieza("caballo_negro.png", 0, 6);
-        agregarPieza("torre_negra.png", 0, 7);
-        for (int col = 0; col < 8; col++) {
-            agregarPieza("peon_negro.png", 1, col);
-        }
-
-        // Agregar piezas blancas al tablero
-        agregarPieza("torre_blanca.png", 7, 0);
-        agregarPieza("caballo_blanco.png", 7, 1);
-        agregarPieza("alfil_blanco.png", 7, 2);
-        agregarPieza("reina_blanca.png", 7, 3);
-        agregarPieza("rey_blanco.png", 7, 4);
-        agregarPieza("alfil_blanco.png", 7, 5);
-        agregarPieza("caballo_blanco.png", 7, 6);
-        agregarPieza("torre_blanca.png", 7, 7);
-
-        //Agregar peones al tablero
-        for (int col = 0; col < 8; col++) {
-            agregarPieza("peon_blanco.png", 6, col);
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                final int finalRow = row; // Crear variable final
+                final int finalCol = col; // Crear variable final
+                tablero.getPieza(row, col).ifPresent(pieza -> agregarPieza(pieza, finalRow, finalCol));
+            }
         }
     }
 
-    private void agregarPieza(String nombreImagen, int fila, int columna) {
-        // Ruta de la imagen de la pieza
-        Image imagen = new Image(getClass().getResourceAsStream("/org/ajedrez/imagenes/" + nombreImagen));
-        ImageView imageView = new ImageView(imagen);
-        imageView.setFitWidth(50);
-        imageView.setFitHeight(50);
-
-        // Colocar la imagen en el GridPane
-        gridPane.add(imageView, columna, fila);
+    private void agregarPieza(Pieza pieza, int fila, int columna) {
+        ImageView piezaView = PiezaView.crearPiezaView(pieza.getImagen());
+        piezaView.setOnMousePressed(event -> onMousePressed(event, piezaView));
+        piezaView.setOnMouseDragged(event -> onMouseDragged(event, piezaView));
+        piezaView.setOnMouseReleased(event -> onMouseReleased(event, piezaView, fila, columna));
+        gridPane.add(piezaView, columna, fila);
     }
+
+    private void onMousePressed(MouseEvent event, ImageView imageView) {
+        piezaSeleccionada = imageView;
+        offsetX = event.getSceneX() - imageView.getTranslateX();
+        offsetY = event.getSceneY() - imageView.getTranslateY();
+        imageView.setMouseTransparent(true);
+        imageView.toFront();
+    }
+
+    private void onMouseDragged(MouseEvent event, ImageView imageView) {
+        if (piezaSeleccionada != null) {
+            imageView.setTranslateX(event.getSceneX() - offsetX);
+            imageView.setTranslateY(event.getSceneY() - offsetY);
+        }
+    }
+
+    private void onMouseReleased(MouseEvent event, ImageView imageView, int filaOriginal, int columnaOriginal) {
+        imageView.setMouseTransparent(false);
+
+        // Calcula la nueva fila y columna según las coordenadas del mouse
+        int columna = (int) Math.round((imageView.getLayoutX() + imageView.getTranslateX()) / 90);
+        int fila = (int) Math.round((imageView.getLayoutY() + imageView.getTranslateY()) / 90);
+
+        // Validar que la posición esté dentro de los límites del tablero
+        if (columna < 0 || columna >= 8 || fila < 0 || fila >= 8) {
+            // Retornar a la posición original si la posición es inválida
+            System.out.println("Posición inválida. Revertiendo movimiento.");
+            imageView.setTranslateX(0);  // Restaura la posición original
+            imageView.setTranslateY(0);  // Restaura la posición original
+            GridPane.setColumnIndex(imageView, columnaOriginal);
+            GridPane.setRowIndex(imageView, filaOriginal);
+        } else {
+            // Si la posición es válida, realiza el movimiento en el tablero lógico
+            tablero.moverPieza(filaOriginal, columnaOriginal, fila, columna);
+            GridPane.setColumnIndex(imageView, columna);  // Actualiza la columna en el GridPane
+            GridPane.setRowIndex(imageView, fila);        // Actualiza la fila en el GridPane
+
+            imageView.setTranslateX(0);  // Restaura las translaciones a 0 para mantener el orden correcto en el GridPane
+            imageView.setTranslateY(0);
+        }
+
+        piezaSeleccionada = null;
+    }
+
 }

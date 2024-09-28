@@ -10,7 +10,7 @@ public class Tableroview {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/ajedrez/tablero-view.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Tablero de Ajedrez");
-        primaryStage.setScene(new Scene(root, 400, 400));
+        primaryStage.setScene(new Scene(root, 720, 720));
         primaryStage.show();
     }
 }

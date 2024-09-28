@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.layout.GridPane?>
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.ajedrez.controller.TableroController" fx:id="gridPane">
-    <!-- El tablero se generará en el controlador -->
+
+<GridPane fx:id="gridPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.ajedrez.controller.TableroController">
+    <!-- El contenido del tablero 8x8 se generará dinámicamente -->
 </GridPane>
