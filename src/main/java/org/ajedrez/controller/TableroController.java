@@ -4,9 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import org.ajedrez.model.AdministradorDeMovimientos;
 import org.ajedrez.model.Pieza;
 import org.ajedrez.model.Tablero;
 import org.ajedrez.view.PiezaView;
+
+import java.util.Optional;
 
 public class TableroController {
     @FXML
@@ -25,19 +28,19 @@ public class TableroController {
     }
 
     private void inicializarTablero() {
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                gridPane.add(PiezaView.crearCasilla(row, col), col, row);
+        for (int fila = 0; fila < 8; fila++) {
+            for (int columna = 0; columna < 8; columna++) {
+                gridPane.add(PiezaView.crearCasilla(fila, columna), columna, fila);
             }
         }
     }
 
     private void inicializarPiezas() {
-        for (int row = 0; row < 8; row++) {
+        for (int fila = 0; fila < 8; fila++) {
             for (int col = 0; col < 8; col++) {
-                final int finalRow = row; // Crear variable final
-                final int finalCol = col; // Crear variable final
-                tablero.getPieza(row, col).ifPresent(pieza -> agregarPieza(pieza, finalRow, finalCol));
+                final int Filafinal = fila; // Crear variable final
+                final int Colfinal = col; // Crear variable final
+                tablero.getPieza(fila, col).ifPresent(pieza -> agregarPieza(pieza, Filafinal, Colfinal));
             }
         }
     }
@@ -69,11 +72,12 @@ public class TableroController {
         imageView.setMouseTransparent(false);
 
         // Calcula la nueva fila y columna según las coordenadas del mouse
-        int columna = (int) Math.round((imageView.getLayoutX() + imageView.getTranslateX()) / 90);
-        int fila = (int) Math.round((imageView.getLayoutY() + imageView.getTranslateY()) / 90);
+        int columnaDestino = (int) Math.round((imageView.getLayoutX() + imageView.getTranslateX()) / 90);
+        int filaDestino = (int) Math.round((imageView.getLayoutY() + imageView.getTranslateY()) / 90);
+
 
         // Validar que la posición esté dentro de los límites del tablero
-        if (columna < 0 || columna >= 8 || fila < 0 || fila >= 8) {
+        if (AdministradorDeMovimientos.movimientoInValido(this.tablero,filaOriginal,columnaOriginal,filaDestino,columnaDestino)) {
             // Retornar a la posición original si la posición es inválida
             System.out.println("Posición inválida. Revertiendo movimiento.");
             imageView.setTranslateX(0);  // Restaura la posición original
@@ -82,9 +86,9 @@ public class TableroController {
             GridPane.setRowIndex(imageView, filaOriginal);
         } else {
             // Si la posición es válida, realiza el movimiento en el tablero lógico
-            tablero.moverPieza(filaOriginal, columnaOriginal, fila, columna);
-            GridPane.setColumnIndex(imageView, columna);  // Actualiza la columna en el GridPane
-            GridPane.setRowIndex(imageView, fila);        // Actualiza la fila en el GridPane
+            tablero.moverPieza(filaOriginal, columnaOriginal, filaDestino, columnaDestino);
+            GridPane.setColumnIndex(imageView, columnaDestino);  // Actualiza la columna en el GridPane
+            GridPane.setRowIndex(imageView, filaDestino);        // Actualiza la fila en el GridPane
 
             imageView.setTranslateX(0);  // Restaura las translaciones a 0 para mantener el orden correcto en el GridPane
             imageView.setTranslateY(0);

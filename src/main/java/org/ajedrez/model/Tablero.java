@@ -12,25 +12,27 @@ public class Tablero {
 
     private void inicializarTablero() {
         // Inicializar piezas blancas y negras
-        piezas[0] = new Pieza[] {
-                new Pieza("torre_negra.png"), new Pieza("caballo_negro.png"), new Pieza("alfil_negro.png"),
-                new Pieza("reina_negra.png"), new Pieza("rey_negro.png"), new Pieza("alfil_negro.png"),
-                new Pieza("caballo_negro.png"), new Pieza("torre_negra.png")
+        piezas[0] = new Pieza[]{
+                new Torre("torre_negra.png", Color.NEGRO), new Caballo("caballo_negro.png", Color.NEGRO),
+                new Alfil("alfil_negro.png", Color.NEGRO), new Reina("reina_negra.png", Color.NEGRO),
+                new Rey("rey_negro.png", Color.NEGRO), new Alfil("alfil_negro.png", Color.NEGRO),
+                new Caballo("caballo_negro.png", Color.NEGRO), new Torre("torre_negra.png", Color.NEGRO)
         };
         piezas[1] = new Pieza[8]; // Peones negros
         for (int i = 0; i < 8; i++) {
-            piezas[1][i] = new Pieza("peon_negro.png");
+            piezas[1][i] = new Peon("peon_negro.png", Color.NEGRO);
         }
 
         piezas[6] = new Pieza[8]; // Peones blancos
         for (int i = 0; i < 8; i++) {
-            piezas[6][i] = new Pieza("peon_blanco.png");
+            piezas[6][i] = new Peon("peon_blanco.png", Color.BLANCO);
         }
 
-        piezas[7] = new Pieza[] {
-                new Pieza("torre_blanca.png"), new Pieza("caballo_blanco.png"), new Pieza("alfil_blanco.png"),
-                new Pieza("reina_blanca.png"), new Pieza("rey_blanco.png"), new Pieza("alfil_blanco.png"),
-                new Pieza("caballo_blanco.png"), new Pieza("torre_blanca.png")
+        piezas[7] = new Pieza[]{
+                new Torre("torre_blanca.png", Color.BLANCO), new Caballo("caballo_blanco.png", Color.BLANCO),
+                new Alfil("alfil_blanco.png", Color.BLANCO), new Reina("reina_blanca.png", Color.BLANCO),
+                new Rey("rey_blanco.png", Color.BLANCO), new Alfil("alfil_blanco.png", Color.BLANCO),
+                new Caballo("caballo_blanco.png", Color.BLANCO), new Torre("torre_blanca.png", Color.BLANCO)
         };
     }
 
@@ -46,5 +48,9 @@ public class Tablero {
             piezas[filaNueva][columnaNueva] = piezas[filaOriginal][columnaOriginal];
             piezas[filaOriginal][columnaOriginal] = null;
         }
+    }
+
+    public boolean estaOcupada(int filaDestino, int columnaDestino) {
+        return getPieza(filaDestino,columnaDestino).isPresent();
     }
 }

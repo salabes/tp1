@@ -8,10 +8,10 @@ import javafx.scene.shape.Rectangle;
 public class PiezaView {
 
     // Crea una casilla de tablero (cuadrado)
-    public static Rectangle crearCasilla(int row, int col) {
-        Rectangle square = new Rectangle(90, 90);
-        square.setFill((row + col) % 2 == 0 ? Color.WHITESMOKE : Color.SADDLEBROWN);
-        return square;
+    public static Rectangle crearCasilla(int fila, int col) {
+        Rectangle cuadrado = new Rectangle(90, 90);
+        cuadrado.setFill((fila + col) % 2 == 0 ? Color.WHITESMOKE : Color.SADDLEBROWN);
+        return cuadrado;
     }
 
     // Crea la vista de una pieza
