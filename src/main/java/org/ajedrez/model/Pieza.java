@@ -17,4 +17,5 @@ public abstract class Pieza {
     }
 
     public abstract boolean validarMovimiento(Tablero tablero, int filaOriginal , int columnaOiriginal, int filaDestino, int columnaDestino);
+    //validarMovimiento devuelve true si el movimiento es valido o false si no lo es.
 }

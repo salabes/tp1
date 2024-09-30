@@ -10,7 +10,7 @@ public class Torre extends Pieza {
         Integer jdiff = (oj - dj);
 
         //falar el caso q AMBOS SEAN 0 Y NO SE MUEVA , EN TODAS LAS PIEZAS
-        if  (((idiff==0) || ( jdiff==0))&& (!tablero.estaOcupada(di, dj))){
+        if  (((idiff==0) || ( jdiff==0)) && (!tablero.estaOcupada(di, dj))){
             return true;
         }
         if  ((idiff==0) || ( jdiff==0)&& (tablero.estaOcupada(di, dj)) ){
