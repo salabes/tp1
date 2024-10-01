@@ -7,16 +7,27 @@ import javafx.scene.layout.GridPane;
 import org.ajedrez.model.Pieza;
 import org.ajedrez.model.Tablero;
 import org.ajedrez.view.PiezaView;
+import org.ajedrez.model.AdministradorDeMovimientos;
 
+/**
+ * Clase controladora que gestiona las interacciones del tablero de ajedrez.
+ * Se encarga de inicializar el tablero y las piezas, y maneja los eventos del mouse
+ * para el movimiento de las piezas en la interfaz gráfica.
+ */
 public class TableroController {
+
     @FXML
-    private GridPane gridPane;
+    private GridPane panelCuadriculado;  // Panel que contiene el tablero de ajedrez
 
-    private Tablero tablero;
-    private ImageView piezaSeleccionada;
-    private double offsetX;
-    private double offsetY;
+    private Tablero tablero;  // Representación lógica del tablero
+    private ImageView imagenPiezaSeleccionada;  // Imagen de la pieza actualmente seleccionada
+    private double desplazamientoX;  // Desplazamiento del mouse en el eje X al presionar la pieza
+    private double desplazamientoY;  // Desplazamiento del mouse en el eje Y al presionar la pieza
 
+    /**
+     * Inicializa el controlador. Se llama automáticamente al cargar el FXML.
+     * Crea una nueva instancia de Tablero y llama a los métodos para inicializar el tablero y las piezas.
+     */
     @FXML
     public void initialize() {
         tablero = new Tablero();
@@ -24,73 +35,110 @@ public class TableroController {
         inicializarPiezas();
     }
 
+    /**
+     * Inicializa el tablero agregando casillas al panel cuadrado.
+     */
     private void inicializarTablero() {
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                gridPane.add(PiezaView.crearCasilla(row, col), col, row);
+        for (int fila = 0; fila < 8; fila++) {
+            for (int columna = 0; columna < 8; columna++) {
+                panelCuadriculado.add(PiezaView.crearCasilla(fila, columna), columna, fila);
             }
         }
     }
 
+    /**
+     * Inicializa las piezas en el tablero. Recorre el tablero y agrega las piezas
+     * correspondientes utilizando el método agregarPieza.
+     */
     private void inicializarPiezas() {
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                final int finalRow = row; // Crear variable final
-                final int finalCol = col; // Crear variable final
-                tablero.getPieza(row, col).ifPresent(pieza -> agregarPieza(pieza, finalRow, finalCol));
+        for (int fila = 0; fila < 8; fila++) {
+            for (int columna = 0; columna < 8; columna++) {
+                final int filaFinal = fila;
+                final int columnaFinal = columna;
+                tablero.getPieza(fila, columna).ifPresent(pieza -> agregarPieza(pieza, filaFinal, columnaFinal));
             }
         }
     }
 
+    /**
+     * Agrega una pieza al tablero en la posición especificada.
+     * @param pieza La pieza a agregar.
+     * @param fila La fila en la que se ubicará la pieza.
+     * @param columna La columna en la que se ubicará la pieza.
+     */
     private void agregarPieza(Pieza pieza, int fila, int columna) {
-        ImageView piezaView = PiezaView.crearPiezaView(pieza.getImagen());
-        piezaView.setOnMousePressed(event -> onMousePressed(event, piezaView));
-        piezaView.setOnMouseDragged(event -> onMouseDragged(event, piezaView));
-        piezaView.setOnMouseReleased(event -> onMouseReleased(event, piezaView, fila, columna));
-        gridPane.add(piezaView, columna, fila);
+        ImageView imagenPieza = PiezaView.crearPiezaView(pieza.getImagen());
+        // Configura los eventos del mouse para la imagen de la pieza
+        imagenPieza.setOnMousePressed(evento -> alPresionarConMouse(evento, imagenPieza));
+        imagenPieza.setOnMouseDragged(evento -> alArrastrarConMouse(evento, imagenPieza));
+        imagenPieza.setOnMouseReleased(evento -> alSoltarMouse(imagenPieza, fila, columna));
+        panelCuadriculado.add(imagenPieza, columna, fila);
     }
 
-    private void onMousePressed(MouseEvent event, ImageView imageView) {
-        piezaSeleccionada = imageView;
-        offsetX = event.getSceneX() - imageView.getTranslateX();
-        offsetY = event.getSceneY() - imageView.getTranslateY();
-        imageView.setMouseTransparent(true);
-        imageView.toFront();
+    /**
+     * Maneja el evento de presionar el mouse sobre una pieza.
+     * @param eventoMouse El evento de mouse que contiene información sobre la acción.
+     * @param vistaImagen La imagen de la pieza que fue presionada.
+     */
+    private void alPresionarConMouse(MouseEvent eventoMouse, ImageView vistaImagen) {
+        imagenPiezaSeleccionada = vistaImagen;
+        desplazamientoX = eventoMouse.getSceneX() - vistaImagen.getTranslateX();
+        desplazamientoY = eventoMouse.getSceneY() - vistaImagen.getTranslateY();
+        vistaImagen.setMouseTransparent(true);  // Evita que se reciban eventos de mouse mientras se arrastra
+        vistaImagen.toFront();  // Lleva la pieza al frente del panel
     }
 
-    private void onMouseDragged(MouseEvent event, ImageView imageView) {
-        if (piezaSeleccionada != null) {
-            imageView.setTranslateX(event.getSceneX() - offsetX);
-            imageView.setTranslateY(event.getSceneY() - offsetY);
+    /**
+     * Maneja el evento de arrastrar una pieza con el mouse.
+     * @param eventoMouse El evento de mouse que contiene información sobre la acción.
+     * @param vistaImagen La imagen de la pieza que se está arrastrando.
+     */
+    private void alArrastrarConMouse(MouseEvent eventoMouse, ImageView vistaImagen) {
+        if (imagenPiezaSeleccionada != null) {
+            vistaImagen.setTranslateX(eventoMouse.getSceneX() - desplazamientoX);
+            vistaImagen.setTranslateY(eventoMouse.getSceneY() - desplazamientoY);
         }
     }
 
-    private void onMouseReleased(MouseEvent event, ImageView imageView, int filaOriginal, int columnaOriginal) {
-        imageView.setMouseTransparent(false);
+    /**
+     * Maneja el evento de soltar una pieza con el mouse.
+     * @param vistaImagen La imagen de la pieza que se está soltando.
+     * @param filaOriginal La fila original de la pieza.
+     * @param columnaOriginal La columna original de la pieza.
+     */
+    private void alSoltarMouse(ImageView vistaImagen, int filaOriginal, int columnaOriginal) {
+        vistaImagen.setMouseTransparent(false);
 
         // Calcula la nueva fila y columna según las coordenadas del mouse
-        int columna = (int) Math.round((imageView.getLayoutX() + imageView.getTranslateX()) / 90);
-        int fila = (int) Math.round((imageView.getLayoutY() + imageView.getTranslateY()) / 90);
+        int nuevaColumna = (int) Math.round((vistaImagen.getLayoutX() + vistaImagen.getTranslateX()) / 90);
+        int nuevaFila = (int) Math.round((vistaImagen.getLayoutY() + vistaImagen.getTranslateY()) / 90);
 
         // Validar que la posición esté dentro de los límites del tablero
-        if (columna < 0 || columna >= 8 || fila < 0 || fila >= 8) {
+        if (AdministradorDeMovimientos.movimientoInValido(tablero, filaOriginal, columnaOriginal, nuevaFila, nuevaColumna)) {
             // Retornar a la posición original si la posición es inválida
             System.out.println("Posición inválida. Revertiendo movimiento.");
-            imageView.setTranslateX(0);  // Restaura la posición original
-            imageView.setTranslateY(0);  // Restaura la posición original
-            GridPane.setColumnIndex(imageView, columnaOriginal);
-            GridPane.setRowIndex(imageView, filaOriginal);
+
+            // Restaura la posición original en el GridPane
+            GridPane.setColumnIndex(vistaImagen, columnaOriginal);
+            GridPane.setRowIndex(vistaImagen, filaOriginal);
+
+            // También es útil reiniciar las traducciones a 0
+            vistaImagen.setTranslateX(0);
+            vistaImagen.setTranslateY(0);
         } else {
             // Si la posición es válida, realiza el movimiento en el tablero lógico
-            tablero.moverPieza(filaOriginal, columnaOriginal, fila, columna);
-            GridPane.setColumnIndex(imageView, columna);  // Actualiza la columna en el GridPane
-            GridPane.setRowIndex(imageView, fila);        // Actualiza la fila en el GridPane
+            tablero.moverPieza(filaOriginal, columnaOriginal, nuevaFila, nuevaColumna);
 
-            imageView.setTranslateX(0);  // Restaura las translaciones a 0 para mantener el orden correcto en el GridPane
-            imageView.setTranslateY(0);
+            // Actualiza la columna y fila en el GridPane
+            GridPane.setColumnIndex(vistaImagen, nuevaColumna);
+            GridPane.setRowIndex(vistaImagen, nuevaFila);
+
+            // Reinicia las traducciones para mantener el orden correcto en el GridPane
+            vistaImagen.setTranslateX(0);
+            vistaImagen.setTranslateY(0);
         }
 
-        piezaSeleccionada = null;
+        imagenPiezaSeleccionada = null;  // Resetea la imagen seleccionada
     }
 
 }

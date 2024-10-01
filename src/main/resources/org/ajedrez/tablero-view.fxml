@@ -2,6 +2,12 @@
 
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane fx:id="gridPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.ajedrez.controller.TableroController">
-    <!-- El contenido del tablero 8x8 se generará dinámicamente -->
+<!--
+    Este archivo define el diseño del tablero de ajedrez utilizando un GridPane(Panel Cuadriculado).
+    El controlador asociado, TableroController, se encargará de generar
+    dinámicamente el contenido del tablero, es decir, las casillas y las piezas.
+-->
+
+<GridPane fx:id="panelCuadriculado" xmlns:fx="http://javafx.com/fxml" fx:controller="org.ajedrez.controller.TableroController">
+    <!-- El contenido del tablero 8x8 se generará dinámicamente en el controlador -->
 </GridPane>
