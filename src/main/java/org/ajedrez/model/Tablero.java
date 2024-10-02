@@ -45,10 +45,19 @@ public class Tablero {
 
     public void moverPieza(int filaOriginal, int columnaOriginal, int filaNueva, int columnaNueva) {
         if (filaNueva >= 0 && filaNueva < 8 && columnaNueva >= 0 && columnaNueva < 8) {
+            Optional<Pieza> piezaDestino = getPieza(filaNueva, columnaNueva);
+
+            // Si hay una pieza en la posición de destino, simplemente la eliminamos
+            // Eliminar la pieza capturada, simplemente no hacemos nada con ella
+            // Puedes imprimir un mensaje si deseas para saber que se capturó
+            piezaDestino.ifPresent(pieza -> System.out.println("Se ha capturado una pieza: " + pieza.getClass().getSimpleName()));
+
+            // Mueve la pieza a la nueva posición (reemplazando la pieza capturada si había una)
             piezas[filaNueva][columnaNueva] = piezas[filaOriginal][columnaOriginal];
-            piezas[filaOriginal][columnaOriginal] = null;
+            piezas[filaOriginal][columnaOriginal] = null; // Limpia la posición original
         }
     }
+
 
     public boolean estaOcupada(int filaDestino, int columnaDestino) {
         return getPieza(filaDestino,columnaDestino).isPresent();

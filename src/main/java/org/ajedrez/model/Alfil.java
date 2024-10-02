@@ -16,7 +16,7 @@ public class Alfil extends Pieza{
         Integer isign = (di - oi) / idiff;
         Integer jsign = (dj - oj) / jdiff;
 
-        if (idiff != jdiff) { //cambiar a bool 
+        if (!idiff.equals(jdiff)) { //cambiar a bool
             return false;
         }
 
@@ -35,4 +35,3 @@ public class Alfil extends Pieza{
         return true;
     }
 }
-

@@ -19,7 +19,7 @@ public class Reina extends Pieza {
         if (!caminoLibre) {
             return false;
         }
-        if (((idiff != jdiff )|| ((idiff==0) || ( jdiff==0)))&& (!tablero.estaOcupada(di, dj))) { //cambiar a bool 
+        if (((idiff != jdiff )|| ((idiff==0) || ( jdiff==0)))&& (!tablero.estaOcupada(di, dj))) { //cambiar a bool
             return true;
         }
         if (tablero.estaOcupada(di, dj)) {

@@ -16,6 +16,6 @@ public abstract class Pieza {
         return color;
     }
 
-    public abstract boolean validarMovimiento(Tablero tablero, int filaOriginal , int columnaOiriginal, int filaDestino, int columnaDestino);
+    public abstract boolean validarMovimiento(Tablero tablero, int filaOriginal , int columnaOriginal, int filaDestino, int columnaDestino);
     //validarMovimiento devuelve true si el movimiento es valido o false si no lo es.
 }

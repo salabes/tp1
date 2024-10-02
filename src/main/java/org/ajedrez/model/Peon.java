@@ -1,25 +1,46 @@
+
 package org.ajedrez.model;
 
-public class Peon extends Pieza{
+public class Peon extends Pieza {
+
     public Peon(String imagen, Color color) {
-        super(imagen,color);
+        super(imagen, color);
     }
+
     @Override
-    public boolean validarMovimiento(Tablero tablero,int oi, int oj, int di, int dj) {
+    public boolean validarMovimiento(Tablero tablero, int filaOriginal, int columnaOriginal, int filaDestino, int columnaDestino) {
+        // Obtener la dirección de avance dependiendo del color
+        int direccion = (this.getColor() == Color.BLANCO) ? -1 : 1;
 
-        Integer idiff = (oi - di);
-        Integer jdiff = (oj - dj);
+        // Verificar movimiento hacia adelante
+        if (columnaOriginal == columnaDestino) {
+            // Mover una casilla hacia adelante
+            if (filaDestino == filaOriginal + direccion && !tablero.estaOcupada(filaDestino, columnaDestino)) {
+                return true;
+            }
 
-
-        if  ((idiff ==1  && jdiff == 0) || ( oi==1 && idiff==2) && !tablero.estaOcupada(di, dj)){
-            return true;
+            // Mover dos casillas hacia adelante desde la posición inicial
+            if ((filaOriginal == 6 && this.getColor() == Color.BLANCO) || (filaOriginal == 1 && this.getColor() == Color.NEGRO)) {
+                if (filaDestino == filaOriginal + 2 * direccion &&
+                        !tablero.estaOcupada(filaOriginal + direccion, columnaOriginal) && // No hay piezas entre medio
+                        !tablero.estaOcupada(filaDestino, columnaDestino)) {
+                    return true;
+                }
+            }
         }
 
-        if  ((idiff==1 && jdiff==1) && (idiff>=0) && (tablero.estaOcupada(di, dj)) ){
-            Pieza piezaDestino = tablero.getPieza(di,dj).get();
-            return !piezaDestino.getColor().equals(this.getColor());
-        } // completa
-        return false;
-    };
+        // Verificar captura en diagonal
+        if (Math.abs(columnaDestino - columnaOriginal) == 1 && filaDestino == filaOriginal + direccion) {
+            if (tablero.estaOcupada(filaDestino, columnaDestino)) {
+                Pieza piezaDestino = tablero.getPieza(filaDestino, columnaDestino).get();
+                // Solo puede capturar si la pieza es del color contrario
+                if (piezaDestino.getColor() != this.getColor()) {
+                    return true;
+                }
+            }
+        }
 
+        // Movimiento no válido
+        return false;
+    }
 }

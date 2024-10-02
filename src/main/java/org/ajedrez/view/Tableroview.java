@@ -4,19 +4,30 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 
+/**
+ * La clase Tableroview es responsable de configurar y mostrar la interfaz gráfica del tablero de ajedrez.
+ */
 public class Tableroview {
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/ajedrez/tablero-view.fxml"));
-        Parent raiz = loader.load();
-        primaryStage.setTitle("Tablero de Ajedrez");
-        primaryStage.setScene(new Scene(raiz, 720, 720));
-        primaryStage.setResizable(false);
 
-        Image icon = new Image(getClass().getResourceAsStream("/org/ajedrez/imagenes/Icono.png"));
-        primaryStage.getIcons().add(icon);
+    /**
+     * Inicia la interfaz del tablero de ajedrez.
+     *
+     * @param escenarioPrincipal El escenario principal de la aplicación donde se mostrará el tablero.
+     * @throws Exception Si ocurre un error durante la carga del archivo FXML.
+     */
+    public void start(Stage escenarioPrincipal) throws Exception {
+        // Carga el archivo FXML que define la interfaz del tablero
+        FXMLLoader cargadorFXML = new FXMLLoader(getClass().getResource("/org/ajedrez/tablero-view.fxml"));
+        Parent root = cargadorFXML.load();
 
-        primaryStage.show();
+        // Configura el título del escenario principal
+        escenarioPrincipal.setTitle("Tablero de Ajedrez");
+
+        // Crea y establece la escena con el contenido cargado
+        escenarioPrincipal.setScene(new Scene(root, 720, 720));
+
+        // Muestra el escenario principal
+        escenarioPrincipal.show();
     }
 }
