@@ -2,6 +2,6 @@
 
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane fx:id="gridPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.ajedrez.controller.TableroController">
+<GridPane fx:id="panelCuadriculado" xmlns:fx="http://javafx.com/fxml" fx:controller="org.ajedrez.controller.TableroController">
     <!-- El contenido del tablero 8x8 se generará dinámicamente -->
 </GridPane>
