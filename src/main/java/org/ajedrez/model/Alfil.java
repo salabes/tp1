@@ -9,29 +9,30 @@ public class Alfil extends Pieza{
     }
 
     @Override
-    public boolean validarMovimiento(Tablero tablero,int oi, int oj, int di, int dj) {
+    public boolean validarMovimiento(Tablero tablero, int oi, int oj, int di, int dj) {
 
-        Integer idiff = Math.abs(oi - di);
-        Integer jdiff = Math.abs(oj - dj);
-        Integer isign = (di - oi) / idiff;
-        Integer jsign = (dj - oj) / jdiff;
+        int idiff = Math.abs(oi - di);
+        int jdiff = Math.abs(oj - dj);
 
-        if (!idiff.equals(jdiff)) { //cambiar a bool
-            return false;
+        if (idiff == jdiff ) {
+            int isign = Integer.signum(di - oi); 
+            int jsign = Integer.signum(dj - oj); 
+
+            boolean caminoLibre = IntStream.range(1, Math.max(idiff, jdiff))
+                    .allMatch(x -> !tablero.estaOcupada(oi + isign * x, oj + jsign * x));
+
+            if (!caminoLibre) {
+                return false;
+            }
+
+            if (tablero.estaOcupada(di, dj)) {
+                Pieza piezaDestino = tablero.getPieza(di, dj).get();
+                return !piezaDestino.getColor().equals(this.getColor());//aca tendria q agg la logica de q si es de color dif se lo coma y lo borre
+            }
+
+            return true;
         }
 
-        boolean caminoLibre = IntStream.range(1, idiff)
-                .allMatch(x -> !tablero.estaOcupada(oi + isign * x, oj + jsign * x));
-
-        if (!caminoLibre) {
-            return false;
-        }
-
-        if (tablero.estaOcupada(di, dj)) {
-            Pieza piezaDestino = tablero.getPieza(di,dj).get();
-            return !piezaDestino.getColor().equals(this.getColor());
-        }
-
-        return true;
+        return false;
     }
 }
