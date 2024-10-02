@@ -15,7 +15,7 @@ public class Reina extends Pieza {
 
         if (idiff == jdiff || idiff == 0 || jdiff == 0) {
             int isign = Integer.signum(di - oi); 
-            int jsign = Integer.signum(dj - oj); /
+            int jsign = Integer.signum(dj - oj);
 
             boolean caminoLibre = IntStream.range(1, Math.max(idiff, jdiff))
                     .allMatch(x -> !tablero.estaOcupada(oi + isign * x, oj + jsign * x));
