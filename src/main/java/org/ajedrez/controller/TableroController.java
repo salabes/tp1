@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.Label;
 import org.ajedrez.model.Pieza;
 import org.ajedrez.model.Tablero;
 import org.ajedrez.view.PiezaView;
@@ -109,11 +110,12 @@ public class TableroController {
      */
     private void alSoltarMouse(ImageView vistaImagen, int filaOriginal, int columnaOriginal) {
         vistaImagen.setMouseTransparent(false);
+        System.out.println(filaOriginal);
 
         // Calcula la nueva fila y columna según las coordenadas del mouse
         int nuevaColumna = (int) Math.round((vistaImagen.getLayoutX() + vistaImagen.getTranslateX()) / 90);
         int nuevaFila = (int) Math.round((vistaImagen.getLayoutY() + vistaImagen.getTranslateY()) / 90);
-
+        System.out.println(nuevaFila);
         // Validar que la posición esté dentro de los límites del tablero
         if (AdministradorDeMovimientos.movimientoInValido(tablero, filaOriginal, columnaOriginal, nuevaFila, nuevaColumna)) {
             // Retornar a la posición original si la posición es inválida

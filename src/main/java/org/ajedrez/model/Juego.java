@@ -16,8 +16,8 @@ public class Juego {
         colores.add(Color.NEGRO);
         colores.add(Color.BLANCO);
 
-        Jugador jugador1 = new Jugador(nombreJugador1,colores.getFirst());
-        Jugador jugador2 = new Jugador(nombreJugador2,colores.getLast());
+        Jugador jugador1 = new Jugador();
+        Jugador jugador2 = new Jugador();
 
         this.tablero = new Tablero();
         this.administradordeturnos = new AdministradorDeTurnos();

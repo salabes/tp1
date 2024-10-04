@@ -23,9 +23,11 @@ public class Tableroview {
 
         // Configura el título del escenario principal
         escenarioPrincipal.setTitle("Tablero de Ajedrez");
+        escenarioPrincipal.setResizable(false);
 
         // Crea y establece la escena con el contenido cargado
-        escenarioPrincipal.setScene(new Scene(root, 720, 720));
+        escenarioPrincipal.setScene(new Scene(root));
+        escenarioPrincipal.sizeToScene();
 
         // Muestra el escenario principal
         escenarioPrincipal.show();

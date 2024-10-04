@@ -1,7 +1,180 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<GridPane fx:id="panelCuadriculado" xmlns:fx="http://javafx.com/fxml" fx:controller="org.ajedrez.controller.TableroController">
-    <!-- El contenido del tablero 8x8 se generará dinámicamente -->
-</GridPane>
+<BorderPane style="-fx-background-color: beige;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ajedrez.controller.TableroController">
+
+    <!-- Contenedor para el HUD superior -->
+    <top>
+        <HBox alignment="TOP_CENTER" style="-fx-background-color: beige;-fx-padding: 5;">
+         <Label prefHeight="54.0" prefWidth="535.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-background-color: lightgray; -fx-border-width: 2;" text="Jugador 1">
+            <font>
+               <Font name="Consolas" size="29.0" />
+            </font>
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+            <padding>
+               <Insets left="10.0" />
+            </padding>
+         </Label>
+         <Label alignment="CENTER" prefHeight="54.0" prefWidth="178.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-background-color: black; -fx-border-width: 2;" text="10:00" textFill="#fffb22">
+            <font>
+               <Font name="Consolas" size="29.0" />
+            </font>
+            <padding>
+               <Insets left="5.0" />
+            </padding>
+         </Label>
+        </HBox>
+    </top>
+
+    <!-- Tablero de ajedrez en el centro -->
+    <center>
+        <Rectangle fill="beige" height="720" stroke="darkred" strokeWidth="10" width="720" />
+
+        <GridPane fx:id="panelCuadriculado" style="-fx-background-color: beige; -fx-border-color: darkred; -fx-border-width: 10">
+            <!-- El contenido del tablero 8x8 se generará dinámicamente -->
+        </GridPane>
+    </center>
+
+    <!-- Contenedor para el HUD inferior -->
+    <bottom>
+        <HBox alignment="BOTTOM_CENTER" style="-fx-background-color: beige;-fx-padding: 5;">
+         <children>
+            <Label alignment="CENTER" prefHeight="54.0" prefWidth="178.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-background-color: black; -fx-border-width: 2;" text="10:00" textFill="#fffb22">
+               <font>
+                  <Font name="Consolas" size="29.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Label>
+            <Label alignment="CENTER_RIGHT" prefHeight="54.0" prefWidth="535.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-background-color: lightgray; -fx-border-width: 2;" text="Jugador 1" textOverrun="CLIP">
+               <font>
+                  <Font name="Consolas" size="29.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </Label>
+         </children>
+        </HBox>
+    </bottom>
+   <left>
+      <GridPane prefHeight="381.0" prefWidth="200.0" BorderPane.alignment="TOP_CENTER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="440.0" minHeight="10.0" prefHeight="327.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="376.0" minHeight="10.0" prefHeight="351.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <VBox alignment="CENTER">
+               <children>
+                  <StackPane>
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="LIGHTGRAY" height="47.0" stroke="BLACK" strokeType="INSIDE" width="190.0">
+                           <StackPane.margin>
+                              <Insets />
+                           </StackPane.margin></Rectangle>
+                        <Label text="Power-Ups!!">
+                           <font>
+                              <Font name="Consolas Bold" size="25.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </StackPane>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="308.0" stroke="BLACK" strokeType="INSIDE" width="190.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></Rectangle>
+               </children>
+            </VBox>
+            <VBox prefHeight="370.0" prefWidth="200.0" GridPane.rowIndex="1">
+               <children>
+                  <StackPane>
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="LIGHTGRAY" height="47.0" stroke="BLACK" strokeType="INSIDE" width="190.0" />
+                        <Label text="Piezas Eliminadas">
+                           <font>
+                              <Font name="Consolas Bold" size="19.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </StackPane>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+   </left>
+   <right>
+      <GridPane BorderPane.alignment="CENTER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="730.0" minHeight="10.0" prefHeight="652.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="370.0" minHeight="0.0" prefHeight="78.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <VBox alignment="CENTER" GridPane.rowIndex="1">
+               <children>
+                  <StackPane>
+                     <children>
+                        <Label text="Presiona si no das mas!">
+                           <font>
+                              <Font name="Consolas" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </StackPane>
+                  <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="184.0" style="-fx-background-radius: 15; -fx-focus-color: transparent; -fx-focus-color: transparent;" text="Rendirse">
+                     <font>
+                        <Font name="Consolas" size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </VBox.margin>
+                     <effect>
+                        <Lighting diffuseConstant="1.35" specularConstant="0.21" specularExponent="20.46" surfaceScale="1.72">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant/>
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+   </right>
+</BorderPane>
