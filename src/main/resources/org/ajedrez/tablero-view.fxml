@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane style="-fx-background-color: beige;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ajedrez.controller.TableroController">
+
+   <!-- Contenedor para el HUD superior -->
+   <top>
+      <HBox alignment="TOP_CENTER" style="-fx-background-color: beige;-fx-padding: 5;">
+         <Label fx:id="jugadorNegras" prefHeight="54.0" prefWidth="535.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-background-color: lightgray; -fx-border-width: 2;" text="Jugador 1">
+            <font>
+               <Font name="Consolas" size="29.0" />
+            </font>
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+            <padding>
+               <Insets left="10.0" />
+            </padding>
+         </Label>
+         <Label fx:id="tiempoJugadorNegras" alignment="CENTER" prefHeight="54.0" prefWidth="178.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-background-color: black; -fx-border-width: 2;" text="10:00" textFill="#fffb22">
+            <font>
+               <Font name="Consolas" size="29.0" />
+            </font>
+            <padding>
+               <Insets left="5.0" />
+            </padding>
+         </Label>
+      </HBox>
+   </top>
+
+   <!-- Tablero de ajedrez en el centro -->
+   <center>
+      <Rectangle fill="transparent" height="720" stroke="darkred" strokeWidth="10" width="720" />
+      <GridPane fx:id="panelCuadriculado" style="-fx-background-color: beige; -fx-border-color: darkred; -fx-border-width: 10">
+         <!-- El contenido del tablero 8x8 se generará dinámicamente -->
+      </GridPane>
+
+   </center>
+
+   <!-- Contenedor para el HUD inferior -->
+   <bottom>
+      <HBox alignment="BOTTOM_CENTER" style="-fx-background-color: beige;-fx-padding: 5;">
+         <children>
+            <Label fx:id="tiempoJugadorBlancas" alignment="CENTER" prefHeight="54.0" prefWidth="178.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-background-color: black; -fx-border-width: 2;" text="10:00" textFill="#fffb22">
+               <font>
+                  <Font name="Consolas" size="29.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Label>
+            <Label fx:id="jugadorBlancas" alignment="CENTER_RIGHT" prefHeight="54.0" prefWidth="535.0" style="-fx-border-color: black; -fx-border-style: solid; -fx-background-color: lightgray; -fx-border-width: 2;" text="Jugador 2" textOverrun="CLIP">
+               <font>
+                  <Font name="Consolas" size="29.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </Label>
+         </children>
+      </HBox>
+   </bottom>
+   <left>
+      <GridPane prefHeight="381.0" prefWidth="200.0" BorderPane.alignment="TOP_CENTER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="440.0" minHeight="10.0" prefHeight="267.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="487.0" minHeight="10.0" prefHeight="369.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="487.0" minHeight="0.0" prefHeight="64.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <AnchorPane prefHeight="258.0" prefWidth="200.0">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="LIGHTGRAY" height="47.0" layoutX="5.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" width="190.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="207.0" layoutX="7.0" layoutY="50.0" stroke="BLACK" strokeType="INSIDE" width="187.0" />
+                  <Label layoutX="24.0" layoutY="9.0" prefHeight="30.0" prefWidth="158.0" text="Power-Ups!!">
+                     <font>
+                        <Font name="Consolas Bold" size="25.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="proteccionJugadorNegras" layoutX="63.0" layoutY="75.0" mnemonicParsing="false" onAction="#chequearColorProteger" prefHeight="25.0" prefWidth="74.0" style="-fx-background-color: red; -fx-border-color: black;" text="PROTEGER" textFill="WHITE">
+                     <font>
+                        <Font name="Consolas" size="12.0" />
+                     </font>
+                     <effect>
+                        <Lighting diffuseConstant="1.35" specularConstant="0.21" specularExponent="20.46" surfaceScale="1.72">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </Button>
+                  <Button fx:id="congeladorJugadorNegras" layoutX="63.0" layoutY="137.0" mnemonicParsing="false" onAction="#chequearColorCongelar" prefHeight="25.0" prefWidth="74.0" style="-fx-background-color: blue; -fx-border-color: black;" text="CONGELAR" textFill="WHITE">
+                     <font>
+                        <Font name="Consolas" size="12.0" />
+                     </font>
+                     <effect>
+                        <Lighting diffuseConstant="1.35" specularConstant="0.21" specularExponent="20.46" surfaceScale="1.72">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </Button>
+                  <Button fx:id="volarJugadorNegras" layoutX="63.0" layoutY="201.0" mnemonicParsing="false" onAction="#chequearColorVolar" prefHeight="25.0" prefWidth="74.0" style="-fx-background-color: GREEN; -fx-border-color: black;" text="VOLAR" textFill="WHITE">
+                     <effect>
+                        <Lighting diffuseConstant="1.35" specularConstant="0.21" specularExponent="20.46" surfaceScale="1.72">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                     <font>
+                        <Font name="Consolas" size="12.0" />
+                     </font>
+                  </Button>
+                  <Label layoutX="21.0" layoutY="50.0" text="Power-Ups de las negras">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="1">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="273.0" layoutX="7.0" layoutY="54.0" stroke="BLACK" strokeType="INSIDE" width="187.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="LIGHTGRAY" height="47.0" layoutX="5.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" width="190.0" />
+                  <Label layoutX="21.0" layoutY="9.0" prefHeight="30.0" prefWidth="158.0" text="Piezas Eliminadas">
+                     <font>
+                        <Font name="Consolas Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <GridPane fx:id="piezasEliminadasBlancas" layoutX="7.0" layoutY="54.0" prefHeight="273.0" prefWidth="184.0">
+                     <columnConstraints>
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="81.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="86.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                  </GridPane>
+                  <GridPane layoutX="7.0" layoutY="54.0" prefHeight="259.0" prefWidth="184.0">
+                     <columnConstraints>
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="81.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="86.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+            <VBox alignment="CENTER" GridPane.rowIndex="2">
+               <children>
+                  <Label alignment="CENTER" prefWidth="178.0" text="Presiona para empatar">
+                     <font>
+                        <Font name="Consolas" size="14.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="botonTablas" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#tablas" prefHeight="32.0" prefWidth="184.0" style="-fx-background-radius: 15; -fx-focus-color: transparent; -fx-focus-color: transparent;" text="TABLAS">
+                     <font>
+                        <Font name="Consolas" size="18.0" />
+                     </font>
+                     <effect>
+                        <Lighting diffuseConstant="1.35" specularConstant="0.21" specularExponent="20.46" surfaceScale="1.72">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+   </left>
+   <right>
+      <GridPane prefHeight="645.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="730.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="730.0" minHeight="10.0" prefHeight="337.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1228.0" minHeight="10.0" prefHeight="278.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="481.0" minHeight="0.0" prefHeight="69.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <VBox alignment="CENTER" prefHeight="61.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="18.0" prefWidth="78.0" text="TURNO DE:">
+                     <font>
+                        <Font name="Consolas Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id = "jugadorTurnoActual" alignment="CENTER" text="JugadorTurnoActual">
+                     <font>
+                        <Font name="Consolas" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <AnchorPane prefHeight="583.0" prefWidth="200.0" GridPane.rowIndex="2">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="207.0" layoutX="7.0" layoutY="64.0" stroke="BLACK" strokeType="INSIDE" width="187.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="LIGHTGRAY" height="47.0" layoutX="5.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" width="190.0" />
+                  <Label layoutX="25.0" layoutY="23.0" text="Power-Ups!!">
+                     <font>
+                        <Font name="Consolas Bold" size="25.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="proteccionJugadorBlancas" layoutX="63.0" layoutY="92.0" mnemonicParsing="false" onAction="#chequearColorProteger" prefHeight="25.0" prefWidth="74.0" style="-fx-background-color: red; -fx-border-color: black;" text="PROTEGER" textFill="WHITE">
+                     <font>
+                        <Font name="Consolas" size="12.0" />
+                     </font>
+                     <effect>
+                        <Lighting diffuseConstant="1.35" specularConstant="0.21" specularExponent="20.46" surfaceScale="1.72">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </Button>
+                  <Button fx:id="volarJugadorBlancas" layoutX="63.0" layoutY="213.0" mnemonicParsing="false" onAction="#chequearColorVolar" prefHeight="25.0" prefWidth="74.0" style="-fx-background-color: green; -fx-border-color: black;" text="VOLAR" textFill="WHITE">
+                     <font>
+                        <Font name="Consolas" size="12.0" />
+                     </font>
+                     <effect>
+                        <Lighting diffuseConstant="1.35" specularConstant="0.21" specularExponent="20.46" surfaceScale="1.72">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </Button>
+                  <Button fx:id="congeladorJugadorBlancas" layoutX="63.0" layoutY="151.0" mnemonicParsing="false" onAction="#chequearColorCongelar" prefHeight="25.0" prefWidth="74.0" style="-fx-background-color: blue; -fx-border-color: black;" text="CONGELAR" textFill="WHITE">
+                     <font>
+                        <Font name="Consolas" size="12.0" />
+                     </font>
+                     <effect>
+                        <Lighting diffuseConstant="1.35" specularConstant="0.21" specularExponent="20.46" surfaceScale="1.72">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect></Button>
+                  <Label layoutX="15.0" layoutY="64.0" text="Power-Ups de las blancas">
+                     <font>
+                        <Font name="Consolas" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <VBox alignment="CENTER" GridPane.rowIndex="3">
+               <children>
+                  <Label text="Presiona si no das mas!">
+                     <font>
+                        <Font name="Consolas" size="14.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="botonRendirse" mnemonicParsing="false" onAction="#rendirse" prefHeight="37.0" prefWidth="184.0" style="-fx-background-radius: 15; -fx-focus-color: transparent; -fx-focus-color: transparent;" text="Rendirse">
+                     <font>
+                        <Font name="Consolas" size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </VBox.margin>
+                     <effect>
+                        <Lighting diffuseConstant="1.35" specularConstant="0.21" specularExponent="20.46" surfaceScale="1.72">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </Button>
+               </children>
+            </VBox>
+            <AnchorPane GridPane.rowIndex="1">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="LIGHTGRAY" height="47.0" layoutX="5.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" width="190.0" />
+                  <Label layoutX="21.0" layoutY="23.0" prefHeight="30.0" prefWidth="158.0" text="Piezas Eliminadas">
+                     <font>
+                        <Font name="Consolas Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="273.0" layoutX="7.0" layoutY="66.0" stroke="BLACK" strokeType="INSIDE" width="187.0" />
+                  <GridPane fx:id="piezasEliminadasNegras" layoutX="8.0" layoutY="66.0" prefHeight="259.0" prefWidth="184.0">
+                     <columnConstraints>
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="46.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="81.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="86.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </GridPane>
+   </right>
+</BorderPane>

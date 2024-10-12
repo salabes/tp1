@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.ajedrez.controller.CoronarController"
+      spacing="10" alignment="CENTER"
+      style="-fx-padding: 20; -fx-background-color: beige; -fx-border-color: black; -fx-border-width: 10;">
+
+    <ImageView fx:id="reinaNegro" fitWidth="80" fitHeight="80" onMouseClicked="#seleccionarReinaNegra">
+        <image>
+            <Image url="@/org/ajedrez/imagenes/reina_negro.png" />
+        </image>
+    </ImageView>
+
+    <ImageView fx:id="torreNegro" fitWidth="80" fitHeight="80" onMouseClicked="#seleccionarTorreNegra">
+        <image>
+            <Image url="@/org/ajedrez/imagenes/torre_negro.png" />
+        </image>
+    </ImageView>
+
+    <ImageView fx:id="alfilNegro" fitWidth="80" fitHeight="80" onMouseClicked="#seleccionarAlfilNegro">
+        <image>
+            <Image url="@/org/ajedrez/imagenes/alfil_negro.png" />
+        </image>
+    </ImageView>
+
+    <ImageView fx:id="caballoNegro" fitWidth="80" fitHeight="80" onMouseClicked="#seleccionarCaballoNegro">
+        <image>
+            <Image url="@/org/ajedrez/imagenes/caballo_negro.png" />
+        </image>
+    </ImageView>
+</HBox>

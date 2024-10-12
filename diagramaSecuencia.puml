@@ -1,0 +1,36 @@
+@startuml
+participant TableroController
+participant MovimientosEspecialesController
+participant MovimientosEspecialesView
+participant Tablero
+participant TableroView
+
+activate TableroController
+TableroController -> MovimientosEspecialesController: chequearMovimientoEspecial(filaOriginal, columnaOriginal, nuevaFila, nuevaColumna)
+activate MovimientosEspecialesController
+alt es rey y columna cumple con condiciones
+    MovimientosEspecialesController -> MovimientosEspecialesController: chequearEnroque()
+
+    alt hay torre
+        MovimientosEspecialesController -> MovimientosEspecialesView: moverTorre(torreView, columnaDestino, fila)
+        activate MovimientosEspecialesView
+        MovimientosEspecialesView -> TableroView: getGridPane().setColumnIndex(torreView, columnaDestino)
+        activate TableroView
+        MovimientosEspecialesView -> TableroView: getGridPane().setRowIndex(torreView, fila)
+        deactivate MovimientosEspecialesView
+        deactivate TableroView
+    end
+    MovimientosEspecialesController -> Tablero: moverPieza()
+    activate Tablero
+    deactivate Tablero
+end
+deactivate MovimientosEspecialesController
+TableroController -> TableroView: moverPieza(rey, nuevaFila, nuevaColumna)
+activate TableroView
+TableroView -> Tablero: moverPieza(filaOrigen, columnaOrigen, filaDestino, columnaDestino)
+deactivate TableroView
+activate Tablero
+@enduml
+
+
+

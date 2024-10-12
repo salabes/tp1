@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<?import javafx.scene.image.Image?>
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.ajedrez.controller.CoronarController"
+      spacing="10" alignment="CENTER"
+      style="-fx-padding: 20; -fx-background-color: beige; -fx-border-color: black; -fx-border-width: 10;">
+
+    <ImageView fx:id="reinaBlanco" fitWidth="80" fitHeight="80" onMouseClicked="#seleccionarReinaBlanca">
+        <image>
+            <Image url="@/org/ajedrez/imagenes/reina_blanco.png" />
+        </image>
+    </ImageView>
+
+    <ImageView fx:id="torreBlanco" fitWidth="80" fitHeight="80" onMouseClicked="#seleccionarTorreBlanca">
+        <image>
+            <Image url="@/org/ajedrez/imagenes/torre_blanco.png" />
+        </image>
+    </ImageView>
+
+    <ImageView fx:id="alfilBlanco" fitWidth="80" fitHeight="80" onMouseClicked="#seleccionarAlfilBlanco">
+        <image>
+            <Image url="@/org/ajedrez/imagenes/alfil_blanco.png" />
+        </image>
+    </ImageView>
+
+    <ImageView fx:id="caballoBlanco" fitWidth="80" fitHeight="80" onMouseClicked="#seleccionarCaballoBlanco">
+        <image>
+            <Image url="@/org/ajedrez/imagenes/caballo_blanco.png" />
+        </image>
+    </ImageView>
+</HBox>

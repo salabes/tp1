@@ -1,0 +1,431 @@
+@startuml
+
+skinparam {
+    linetype ortho
+    BorderColor Black
+    ArrowColor Black
+    FontSize 12
+    Padding 15
+    Margin 15
+    PackageBorderThickness 3
+}
+
+
+package "Model"{
+    class Juego {
+        - List<Jugador> jugadores
+        - Tablero tablero
+        - AdministradorDeMovimientos administradordemovimientos
+        - AdministradorDeTurnos administradordeturnos
+
+        + Juego(jugadores: List<Jugador>)
+        + getTablero(): Tablero
+        + getJugadorSegunColor(color: Color): Jugador
+        + movimientoInvalido(filaOriginal: int, columnaOriginal: int, filaDestino: int, columnaDestino: int): boolean
+        + siguienteTurno()
+        + getColorJugadorTurnoActual(): Color
+        + getAdministradorDeTurnos(): AdministradorDeTurnos
+    }
+
+    class Jugador {
+        - String nombre
+        - Color color
+        - Temporizador tiempo
+
+        + Jugador(nombre: String, color: Color, tiempo: Temporizador)
+        + getNombre(): String
+        + getColor(): Color
+        + getTemporizador(): Temporizador
+        + iniciarTemporizador()
+        + pausarTemporizador()
+    }
+
+    class Tablero {
+        - Casillero[][] casilleros
+        - ArrayList<Pieza> piezas
+        - int cantPiezas
+
+        + Tablero()
+        + getPieza(fila: int, columna: int): Optional<Pieza>
+        + moverPieza(filaOriginal: int, columnaOriginal: int, filaNueva: int, columnaNueva: int)
+        + estaOcupada(filaDestino: int, columnaDestino: int): boolean
+        + agregarPieza(pieza: Pieza, fila: int, columna: int)
+        + reemplazarPieza(piezaNueva: Pieza, fila: int, columna: int)
+        + eliminarPieza(fila: int, columna: int)
+        + getCantPiezas(): int
+        + getPiezas(): ArrayList<Pieza>
+    }
+
+    class Casillero {
+        - Pieza pieza
+        - boolean ocupado
+
+        + Casillero()
+        + setPieza(pieza: Pieza)
+        + getPieza(): Pieza
+        + estaOcupada(): boolean
+        + limpiarCasillero()
+    }
+
+    abstract class Pieza {
+        - Color color
+        - int fila
+        - int columna
+        - Efecto efecto
+
+        + Pieza(color: Color, fila: int, columna: int)
+        + setFila(fila: int)
+        + setColumna(columna: int)
+        + setEfecto(efecto: Efecto)
+        + getColor(): Color
+        + getFila(): int
+        + getColumna(): int
+        + getEfecto(): Efecto
+        + getImagen(): String
+        + getTipo(): String
+        + validarMovimiento(tablero: Tablero, filaOriginal: int, columnaOriginal: int, filaDestino: int, columnaDestino: int): boolean
+    }
+
+    abstract class Efecto {
+        - boolean efectoactivo
+        - int cantidadTurnosActivos
+
+        + Efecto()
+        + activarEfecto()
+        + descontarTiempo(): boolean
+        + aplicarEfectoView(vista: ImageView)
+        + setCantidadTurnosActivos()
+        + getTipo(): String
+    }
+
+    class Freeze extends Efecto {
+        + Freeze()
+        + setCantidadTurnosActivos()
+        + getTipo(): String
+        + aplicarEfectoView(vista: ImageView)
+    }
+
+    class Protect extends Efecto {
+        + Protect()
+        + setCantidadTurnosActivos()
+        + getTipo(): String
+        + aplicarEfectoView(vista: ImageView)
+    }
+
+    class Volar extends Efecto{
+        +Volar()
+        +void setCantidadTurnosActivos()
+        +String getTipo()
+        +void aplicarEfectoView(ImageView vista)
+    }
+
+
+    class AdministradorDeMovimientos {
+        + movimientoInValido(tablero: Tablero, filaOriginal: int, columnaOriginal: int, filaDestino: int, columnaDestino: int): boolean
+    }
+
+    class AdministradorDeTurnos {
+        - int turnos
+        - List<Jugador> jugadores
+
+        + AdministradorDeTurnos(jugadores: List<Jugador>)
+        + siguienteTurno()
+        + getTurnoActual(): Jugador
+        + getJugadorActual(): Jugador
+    }
+
+    class Alfil extends Pieza {
+        + validarMovimiento(tablero: Tablero, oi: int, oj: int, di: int, dj: int): boolean
+        + getTipo(): String
+    }
+
+    class Caballo extends Pieza {
+        + validarMovimiento(tablero: Tablero, filaOriginal: int, columnaOriginal: int, filaDestino: int, columnaDestino: int): boolean
+        + getTipo(): String
+    }
+
+    class Peon extends Pieza {
+        + validarMovimiento(tablero: Tablero, filaOriginal: int, columnaOriginal: int, filaDestino: int, columnaDestino: int): boolean
+        + haLlegadoAFilaFinal(fila: int): boolean
+        + getTipo(): String
+    }
+
+    class Reina extends Pieza {
+        + validarMovimiento(tablero: Tablero, oi: int, oj: int, di: int, dj: int): boolean
+        + getTipo(): String
+    }
+
+    class Rey extends Pieza {
+        - boolean haMovido
+        + validarMovimiento(tablero: Tablero, oi: int, oj: int, di: int, dj: int): boolean
+        + marcarComoMovido()
+        + haMovido(): boolean
+        + getTipo(): String
+    }
+
+    class Torre extends Pieza {
+        - boolean haMovido
+        + validarMovimiento(tablero: Tablero, oi: int, oj: int, di: int, dj: int): boolean
+        + marcarComoMovido()
+        + haMovido(): boolean
+        + getTipo(): String
+    }
+
+    class Temporizador {
+        - int tiempoRestante
+        - Label etiquetaTiempo
+        - Timeline timeline
+        + Temporizador(minutosIniciales: int)
+        + setEtiquetaTiempo(etiquetaTiempo: Label)
+        + iniciar()
+        + pausar()
+        - decrementarTiempo()
+        - actualizarEtiquetaTiempo()
+    }
+
+    enum Color {
+        NEGRO
+        BLANCO
+    }
+}
+
+package "Controladores" {
+    class CoronarController {
+        - MovimientosEspecialesController movimientosEspecialesController
+        - int filaDestino
+        - int columnaDestino
+        + void setPosicionPeon(int filaDestino, int columnaDestino)
+        + void setMovimientosEspecialesController(MovimientosEspecialesController movimientosEspecialescontroller)
+        + void seleccionarReinaBlanca()
+        + void seleccionarReinaNegra()
+        + void seleccionarTorreBlanca()
+        + void seleccionarTorreNegra()
+        + void seleccionarAlfilBlanco()
+        + void seleccionarAlfilNegro()
+        + void seleccionarCaballoBlanco()
+        + void seleccionarCaballoNegro()
+        - void cerrarVentana(ImageView Pieza)
+    }
+
+    class EfectoController {
+        - Efecto efectoElejido
+        + void setEfectoElejido(Efecto efectoElejido)
+        + Efecto getEfectoElejido()
+        + void aplicarEfecto(ImageView vistaImagen, Pieza pieza)
+        + static void descontarEfectos(Juego juego, TableroView tableroView)
+    }
+
+    class JuegoController {
+        - Juego juego
+        - Color colorJugador1
+        - Color colorJugador2
+        + void initialize()
+        + void iniciarPartida(ActionEvent event)
+        + void iniciarJuego(List<String> nombres)
+        + void InicializarEleccionColor()
+    }
+
+    class MovimientosEspecialesController {
+        - MovimientosEspecialesView movimientosEspecialesView
+        - TableroController tableroController
+        - Pieza pieza
+        - int filaDestino
+        - int columnaDestino
+        + void setTablero(TableroController tableroController)
+        + boolean chequearMovimientoEspecial(int filaOrigen, int columnaOrigen, int filaDestino, int columnaDestino)
+        + void chequearPiezaComida(Tablero tablero)
+        + boolean chequearCoronar(Peon peon)
+        + void coronarPeon(Pieza piezaElejida)
+        + void chequearEnroque(int deltaColumna)
+    }
+
+    class PiezasEliminadasController {
+        - GridPane gridpaneBlancas
+        - GridPane gridpaneNegras
+        - int filaBlancas = 0
+        - int columnaBlancas = 0
+        - int filaNegras = 0
+        - int columnaNegras = 0
+
+        + PiezasEliminadasController(GridPane gridpaneBlancas, GridPane gridPaneNegras)
+        + agregarPiezaEliminadaAGridPane(ImageView imagen, Color color)
+    }
+
+    class TableroController {
+
+        - Juego juego
+        - Boolean coronacion
+        - TableroView tableroView
+        - Boolean efectoSeleccionado
+        - MovimientosEspecialesController movimientosEspeciales
+        - EfectoController efectoController
+        - List<int[]> casillasResaltadas
+        - ImageView imagenPiezaSeleccionada
+        - double desplazamientoX
+        - double desplazamientoY
+        - Boolean protection
+        - Boolean freezar
+        - Boolean volar
+        - GridPane panelCuadriculado
+        - GridPane piezasEliminadasNegras
+        - PiezasEliminadasController piezasEliminadasController
+        - GridPane piezasEliminadasBlancas
+        - Label jugadorBlancas
+        - Label jugadorNegras
+        - Label jugadorTurnoActual
+        - Label tiempoJugadorBlancas
+        - Label tiempoJugadorNegras
+        - Button congeladorJugadorNegras
+        - Button congeladorJugadorBlancas
+        - Button proteccionJugadorBlancas
+        - Button proteccionJugadorNegras
+        - Button volarJugadorBlancas
+        - Button volarJugadorNegras
+
+        + void initialize()
+        + void InicializarTablero()
+        + void cargarTablero()
+        + void setJuego(Juego juego)
+        + void setLabels()
+        + Tablero getTablero()
+        + TableroView getTableroView()
+        + PiezasEliminadasController getPiezasEliminadasController()
+        + void rendirse(ActionEvent event)
+        + void tablas(ActionEvent event)
+        + void buscarHacke()
+        + void verificarMovimiento(ActionEvent event, int filaOriginal, int columnaOriginal, int filaDestino, int columnaDestino)
+        + boolean chequearHackeMate(ActionEvent event, Pieza piezaAComer)
+        + void congelarRival(Color colorJugador)
+        + void protegerPropias(Color colorJugador)
+        + void permitirVuelo(Color colorJugador)
+        + void chequearColorVolar(ActionEvent event)
+        + void chequearColorCongelar(ActionEvent event)
+        + void chequearColorProteger(ActionEvent event)
+        + void alPresionarConMouse(MouseEvent eventoMouse, ImageView vistaImagen)
+        + void alArrastrarConMouse(MouseEvent eventoMouse, ImageView vistaImagen)
+        + void alSoltarMouse(ImageView vistaImagen, int filaOriginal, int columnaOriginal)
+        + void setearEventos(PiezaView piezaView, int filaFinal, int columnaFinal)
+        + void ActualizarTemporizadores()
+        + void resaltarCasillas(Pieza piezaSeleccionada, int filaOriginal, int columnaOriginal, boolean resaltar)
+        + void desresaltarCasillas(int filaOriginal, int columnaOriginal)
+        + List<int[]> obtenerPosicionesValidas(Pieza pieza, int filaOriginal, int columnaOriginal)
+        + void resetearSoltarMouse(ImageView vistaImagen, int nuevaFila, int nuevaColumna)
+
+    }
+
+    class VentanaController {
+        - Label nombreTexto
+
+        + void reutilizarVentanaInicial(ActionEvent event, String textoVentana, Label etiqueta)
+        + void abrirVentanaInicial(ActionEvent event, Stage escenario)
+        + void abrirVentanaUsuarios(ActionEvent event)
+        + TableroController abrirVentanaTablero(ActionEvent event)
+        + void abrirVentanaCoronacion(ActionEvent event, Color colorPieza, int filaDestino, int columnaDestino, MovimientosEspecialesController movimientosEspeciales)
+        + FXMLLoader CargarFxml(ActionEvent event, Stage escenario, String nombreArchivo, String Titulo)
+        + void setNombreTexto(String texto)
+        + void cerrarVentana(ActionEvent event)
+        + void cerrarVentana(Label etiqueta)
+    }
+
+}
+
+package "Vistas" {
+    class MovimientosEspecialesView {
+        - TableroView tableroView
+        + MovimientosEspecialesView(TableroView tableroView)
+        + void comerPieza(Tablero tablero, Pieza piezaComida, int filaDestino, int columnaDestino)
+        + PiezaView coronar(Pieza peon, Pieza piezaElejida, int filaDestino, int columnaDestino)
+        + void enrocar(ImageView torreView, int fila, int columnaDestino)
+    }
+
+    class PiezaView {
+        - final ImageView vistaPieza
+        + PiezaView(String rutaImagen)
+        + ImageView getVistaPieza()
+        + void resaltar()
+        + void quitarResaltado()
+    }
+
+    class TableroView {
+        - final GridPane tableroGrid
+        - final StackPane[][] casillas
+        - final int filas
+        - final int columnas
+        - Tablero tablero
+        - Map<Pieza, ImageView> mapaPiezas
+        + TableroView(GridPane tableroGrid)
+        + GridPane getTableroGrid()
+        + void setTablero(Tablero tablero)
+        + GridPane getGridPane()
+        + void crearTablero()
+        + void limpiarCasilla(int fila, int columna)
+        + ImageView obtenerVistaDePieza(Pieza pieza)
+        + void agregarPiezaView(PiezaView piezaView, Pieza pieza, int fila, int columna)
+        + void eliminarPiezaView(Pieza pieza)
+        + PiezaView reemplazarPiezaView(Pieza pieza, Pieza nuevaPieza, int fila, int columna)
+        + void inicializarPiezas(TableroController controller)
+        + void resaltarCasilla(int fila, int columna, boolean resaltar)
+        + void moverPieza(ImageView vistaImagen, int filaOrigen, int columnaOrigen, int filaDestino, int columnaDestino)
+    }
+
+}
+
+Juego "1" o-- "2" Jugador
+Juego "1" ..> "2" Jugador
+Juego "1" o-- "1" AdministradorDeTurnos
+Juego "1" ..> "1" AdministradorDeTurnos
+Juego "1" o-- "1"AdministradorDeMovimientos
+Juego "1" ..> "1"AdministradorDeMovimientos
+
+Jugador "1" --> "1"Temporizador
+Jugador "1" ..> "1"Color
+
+Pieza "1" ..> "0..1" Efecto
+Pieza "1" o-- "0..1" Efecto
+Pieza "1" o-- "1" Color
+Pieza "1" ..> "1" Color
+
+Casillero "1" o-- "0..1"Pieza
+Casillero "1" ..> "0..1" Pieza
+
+Tablero "1" ..> "32" Casillero
+Tablero "1" o-- "32" Casillero
+
+MovimientosEspecialesView "1" o-- "1" TableroView
+
+TableroView "1" ..> "1" PiezaView
+TableroView "1" ..> "1" Tablero
+TableroView "1" o-- "1" Tablero
+
+CoronarController "1" o-- "1" MovimientosEspecialesController
+CoronarController "1" ..> "1" MovimientosEspecialesController
+
+EfectoController "1" ..> "1" Pieza
+EfectoController "1" ..> "1" Efecto
+EfectoController "1" o-- "1" Efecto
+
+JuegoController "1" o-- "1" Juego
+JuegoController "1" o-- "2" Color
+
+MovimientosEspecialesController "1" ..> "1" Peon
+MovimientosEspecialesController "1" o-- "1" Pieza
+MovimientosEspecialesController "1" ..> "1" Pieza
+MovimientosEspecialesController "1" o-- "1" MovimientosEspecialesView
+MovimientosEspecialesController "1" o-- "1" TableroController
+MovimientosEspecialesController "1" o-- "1" PiezasEliminadasController
+
+TableroController "1" ..> "1" Juego
+TableroController "1" o-- "1" Juego
+TableroController "1" ..> "2" Color
+TableroController "1" ..> "1" Tablero
+TableroController "1" o-- "1" TableroView
+TableroController "1" ..> "1" TableroView
+TableroController "1" o-- "1" EfectoController
+TableroController "1" ..> "1" VentanaController
+TableroController "1" o-- "1" PiezasEliminadasController
+
+VentanaController "1" ..> "1" Color
+
+
+
+@enduml
