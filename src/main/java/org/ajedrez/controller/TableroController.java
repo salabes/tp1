@@ -350,6 +350,9 @@ public class TableroController {
                     volarJugadorBlancas.setDisable(true);
                 }
                 volar = false;
+            } if(efectoSeleccionado && piezaSeleccionada.getTipo() == "rey"){
+                protection = false;
+                volar = false;
             }
         }
 
