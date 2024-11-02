@@ -75,11 +75,11 @@ public class Torre extends Pieza {
                 int columnaRey = 4;
                 int columnaTorre = (dj - oj) > 0 ? 7 : 0; // Enroque corto o largo
 
-                Pieza rey = tablero.getPieza(oi, columnaRey).orElse(null);
-                Pieza torre = tablero.getPieza(oi, columnaTorre).orElse(null);
+                Pieza posibleRey = tablero.getPieza(oi, columnaRey).orElse(null);
+                Pieza posibleTorre = tablero.getPieza(oi, columnaTorre).orElse(null);
 
                 // Validar que el rey y la torre sean válidos y que la torre no haya sido movida
-                if (rey instanceof Rey && torre instanceof Torre && !((Torre) torre).haMovido()) {
+                if (posibleRey.getTipo() == "rey" && posibleTorre.getTipo() == "torre" && !((Torre) posibleTorre).haMovido()) {
                     //System.out.println("Entro torre");
                     return true; // Movimiento válido de enroque
                 } else {

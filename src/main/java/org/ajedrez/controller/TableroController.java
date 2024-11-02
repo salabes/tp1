@@ -212,7 +212,7 @@ public class TableroController {
         }
         if(hayHackeMate == false){
             this.coronacion = movimientosEspeciales.chequearMovimientoEspecial(filaOriginal, columnaOriginal, filaDestino, columnaDestino);
-            if(piezaOptOrigen.get() instanceof Torre){
+            if(piezaOptOrigen.get().getTipo() == "torre"){
                 Torre pieza = (Torre) piezaOptOrigen.get();
                 pieza.marcarComoMovido();
             }
@@ -316,44 +316,43 @@ public class TableroController {
         int columnaOriginal = GridPane.getColumnIndex(vistaImagen);
 
         Pieza piezaSeleccionada = juego.getTablero().getPieza(filaOriginal, columnaOriginal).get();
-        if(piezaSeleccionada.getTipo() != "rey"){
 
-            // Verifica si es el turno del jugador correcto
-            if (piezaSeleccionada.getColor() != juego.getColorJugadorTurnoActual()) {
-                if (efectoSeleccionado && freezar) {
-                    efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
-                    efectoSeleccionado = false;
-                    if (piezaSeleccionada.getColor() == Color.BLANCO) {
-                        congeladorJugadorNegras.setDisable(true);
-                    } else {
-                        congeladorJugadorBlancas.setDisable(true);
-                    }
-                    freezar = false;
+        // Verifica si es el turno del jugador correcto
+        if (piezaSeleccionada.getColor() != juego.getColorJugadorTurnoActual()) {
+            if (efectoSeleccionado && freezar && piezaSeleccionada.getTipo() != "rey") {
+                efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
+                efectoSeleccionado = false;
+                if (piezaSeleccionada.getColor() == Color.BLANCO) {
+                    congeladorJugadorNegras.setDisable(true);
                 } else {
-                    return;
+                    congeladorJugadorBlancas.setDisable(true);
                 }
+                freezar = false;
             } else {
-                if (efectoSeleccionado && protection) {
-                    efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
-                    efectoSeleccionado = false;
-                    if (piezaSeleccionada.getColor() == Color.NEGRO) {
-                        proteccionJugadorNegras.setDisable(true);
-                    } else {
-                        proteccionJugadorBlancas.setDisable(true);
-                    }
-                    protection = false;
-                } else if (efectoSeleccionado && volar) {
-                    efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
-                    efectoSeleccionado = false;
-                    if (piezaSeleccionada.getColor() == Color.NEGRO) {
-                        volarJugadorNegras.setDisable(true);
-                    } else {
-                        volarJugadorBlancas.setDisable(true);
-                    }
-                    volar = false;
+                return;
+            }
+        } else {
+            if (efectoSeleccionado && protection && piezaSeleccionada.getTipo() != "rey") {
+                efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
+                efectoSeleccionado = false;
+                if (piezaSeleccionada.getColor() == Color.NEGRO) {
+                    proteccionJugadorNegras.setDisable(true);
+                } else {
+                    proteccionJugadorBlancas.setDisable(true);
                 }
+                protection = false;
+            } else if (efectoSeleccionado && volar && piezaSeleccionada.getTipo() != "rey") {
+                efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
+                efectoSeleccionado = false;
+                if (piezaSeleccionada.getColor() == Color.NEGRO) {
+                    volarJugadorNegras.setDisable(true);
+                } else {
+                    volarJugadorBlancas.setDisable(true);
+                }
+                volar = false;
             }
         }
+
         imagenPiezaSeleccionada = vistaImagen;
         //System.out.println(efectoSeleccionado);
         //System.out.println(protection);

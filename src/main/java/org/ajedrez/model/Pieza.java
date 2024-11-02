@@ -102,12 +102,4 @@ public abstract class Pieza {
      * @param nuevaColumna Nueva columna de la pieza.
      * @return true si el movimiento de vuelo es válido, false en caso contrario.
      */
-    public boolean movimientoVueloValido(int nuevaFila, int nuevaColumna) {
-        if (efecto instanceof Volar && efecto.isEfectoActivo()) {
-            // Permitir que la pieza pase por encima de otras
-            return true; // Lógica específica para el tipo de pieza puede ser añadida aquí
-        }
-        // Aquí puedes agregar la lógica normal de validación de movimiento
-        return false; // Retorna false si no se cumplen las condiciones
-    }
 }

@@ -59,13 +59,13 @@ public class MovimientosEspecialesController {
         chequearPiezaComida(tableroController.getTablero());
 
         // Si es un peón, verificar si llega a la coronación
-        if(pieza instanceof Peon){
+        if(pieza.getTipo() == "peon"){
             Peon peon = (Peon) pieza;
             huboCoronacion = chequearCoronar(peon);
         }
 
         // Si es un rey, verificar si puede realizar enroque
-        if (pieza instanceof Rey) {
+        if (pieza.getTipo() == "rey") {
             int deltaColumna = this.columnaDestino - columnaOrigen;
             if (Math.abs(deltaColumna) == 2) {
                 chequearEnroque(deltaColumna);
@@ -152,7 +152,7 @@ public class MovimientosEspecialesController {
         Optional<Pieza> torreOpt = tableroController.getTablero().getPieza(this.filaDestino, columnaOrigen);
 
         // Verificar que hay una torre para enrocar
-        if (torreOpt.isPresent() && torreOpt.get() instanceof Torre) {
+        if (torreOpt.isPresent() && torreOpt.get().getTipo() == "torre") {
             ImageView torreView = tableroController.getTableroView().obtenerVistaDePieza(torreOpt.get());
             if (torreView != null){
                 // Mueve la torre en la vista

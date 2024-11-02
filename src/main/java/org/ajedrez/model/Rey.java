@@ -49,7 +49,7 @@ public class Rey extends Pieza {
 
                 Optional<Pieza> piezaOpt = tablero.getPieza(oi, (dj == 2) ? 0 : 7);
 
-                if (piezaOpt.isPresent() && piezaOpt.get() instanceof Torre) {
+                if (piezaOpt.isPresent() && piezaOpt.get().getTipo() == "torre") {
                     Torre torre = (Torre) piezaOpt.get();
                     if (torre.haMovido() || haMovido()) {
                         return false; // La torre ya se ha movido o el rey no puede moverse
