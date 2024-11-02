@@ -40,14 +40,15 @@ public class EfectoController {
      * @param pieza La pieza sobre la que se aplicará el efecto.
      */
     public void aplicarEfecto(ImageView vistaImagen, Pieza pieza) {
+        //if (pieza.getTipo() != "rey") {
+
         // Asigna el efecto a la pieza
         pieza.setEfecto(efectoElejido);
-
         // Activa el efecto en la pieza
         pieza.getEfecto().activarEfecto();
-
         // Aplica los cambios visuales del efecto en la vista de la pieza
         pieza.getEfecto().aplicarEfectoView(vistaImagen);
+        //}
     }
 
     /**
@@ -82,7 +83,7 @@ public class EfectoController {
             }
         }
 
-        // Comentario indicando que esta implementación se realizó por limitaciones temporales
+        // ¡Comentario indicando que esta implementación se realizó por limitaciones temporales
         /*
         // Código alternativo comentado que utiliza una lista de piezas
         for (int i = 0; i < juego.getTablero().getCantPiezas(); i++) {

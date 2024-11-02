@@ -31,6 +31,7 @@ public class Torre extends Pieza {
      * @return true si el movimiento es válido, false en caso contrario.
      */
     public boolean validarMovimiento(Tablero tablero, int oi, int oj, int di, int dj) {
+        //System.out.println("Entro a validar movimiento");
         // Verificar si la torre está congelada
         if (getEfecto() != null && "freeze".equals(getEfecto().getTipo())) {
             return false; // No puede moverse si está congelada
@@ -47,8 +48,21 @@ public class Torre extends Pieza {
         int isign = Integer.signum(di - oi); // Signo de la dirección en filas
         int jsign = Integer.signum(dj - oj); // Signo de la dirección en columnas
 
+        if (tablero.estaOcupada(di, dj)) {
+            Pieza piezaDestino = tablero.getPieza(di, dj).get();
+            if (piezaDestino.getColor().equals(this.getColor())) {
+                return false; // No se puede capturar una pieza del mismo color
+            }
+        }
+        boolean caminosLibre = IntStream.range(1, Math.max(idiff, jdiff))
+                .allMatch(x -> !tablero.estaOcupada(oi + isign * x, oj + jsign * x));
+        if (!caminosLibre) {
+            return false; // Camino obstruido
+        }
+
         // Si no hay efecto especial
         if (this.getEfecto() == null) {
+            //System.out.println("ERRORRRRR");
             // Verificar si el camino está libre
             boolean caminoLibre = IntStream.range(1, Math.max(idiff, jdiff))
                     .allMatch(x -> !tablero.estaOcupada(oi + isign * x, oj + jsign * x));
@@ -66,6 +80,7 @@ public class Torre extends Pieza {
 
                 // Validar que el rey y la torre sean válidos y que la torre no haya sido movida
                 if (rey instanceof Rey && torre instanceof Torre && !((Torre) torre).haMovido()) {
+                    //System.out.println("Entro torre");
                     return true; // Movimiento válido de enroque
                 } else {
                     return false; // Movimiento de enroque no válido

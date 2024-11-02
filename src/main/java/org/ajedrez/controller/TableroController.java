@@ -316,47 +316,49 @@ public class TableroController {
         int columnaOriginal = GridPane.getColumnIndex(vistaImagen);
 
         Pieza piezaSeleccionada = juego.getTablero().getPieza(filaOriginal, columnaOriginal).get();
+        if(piezaSeleccionada.getTipo() != "rey"){
 
-
-        // Verifica si es el turno del jugador correcto
-        if (piezaSeleccionada.getColor() != juego.getColorJugadorTurnoActual()) {
-            if (efectoSeleccionado  && freezar) {
-                efectoController.aplicarEfecto(vistaImagen,piezaSeleccionada);
-                efectoSeleccionado = false;
-                if (piezaSeleccionada.getColor() == Color.BLANCO){
-                    congeladorJugadorNegras.setDisable(true);
-                }   else {
-                    congeladorJugadorBlancas.setDisable(true);
+            // Verifica si es el turno del jugador correcto
+            if (piezaSeleccionada.getColor() != juego.getColorJugadorTurnoActual()) {
+                if (efectoSeleccionado && freezar) {
+                    efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
+                    efectoSeleccionado = false;
+                    if (piezaSeleccionada.getColor() == Color.BLANCO) {
+                        congeladorJugadorNegras.setDisable(true);
+                    } else {
+                        congeladorJugadorBlancas.setDisable(true);
+                    }
+                    freezar = false;
+                } else {
+                    return;
                 }
-                freezar = false;
             } else {
-                return;
-            }
-        } else {
-            if (efectoSeleccionado && protection) {
-                efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
-                efectoSeleccionado = false;
-                if (piezaSeleccionada.getColor() == Color.NEGRO){
-                    proteccionJugadorNegras.setDisable(true);
-                }   else {
-                    proteccionJugadorBlancas.setDisable(true);
+                if (efectoSeleccionado && protection) {
+                    efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
+                    efectoSeleccionado = false;
+                    if (piezaSeleccionada.getColor() == Color.NEGRO) {
+                        proteccionJugadorNegras.setDisable(true);
+                    } else {
+                        proteccionJugadorBlancas.setDisable(true);
+                    }
+                    protection = false;
+                } else if (efectoSeleccionado && volar) {
+                    efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
+                    efectoSeleccionado = false;
+                    if (piezaSeleccionada.getColor() == Color.NEGRO) {
+                        volarJugadorNegras.setDisable(true);
+                    } else {
+                        volarJugadorBlancas.setDisable(true);
+                    }
+                    volar = false;
                 }
-                protection = false;
-            }
-            if (efectoSeleccionado && volar) {
-                efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
-                efectoSeleccionado = false;
-                if (piezaSeleccionada.getColor() == Color.NEGRO){
-                    volarJugadorNegras.setDisable(true);
-                }   else {
-                    volarJugadorBlancas.setDisable(true);
-                }
-                volar = false;
             }
         }
-
         imagenPiezaSeleccionada = vistaImagen;
+        //System.out.println(efectoSeleccionado);
+        //System.out.println(protection);
         resaltarCasillas(piezaSeleccionada, filaOriginal, columnaOriginal, true);
+        //System.out.println("ACÁ ESTÁ EL ERROR");
         desplazamientoX = eventoMouse.getSceneX() - vistaImagen.getTranslateX();
         desplazamientoY = eventoMouse.getSceneY() - vistaImagen.getTranslateY();
         vistaImagen.setMouseTransparent(true);  // Evita que se reciban eventos de mouse mientras se arrastra
@@ -403,6 +405,10 @@ public class TableroController {
             if (!coronacion) {
                 ActualizarTemporizadores();
             }
+            //efectoSeleccionado = false;
+            //protection = false;
+            //freezar = false;
+            //volar  = false;
 
         }
         vistaImagen.setTranslateX(0);
@@ -492,8 +498,14 @@ public class TableroController {
         // Supongamos que cada Pieza tiene un método validarMovimiento(filaDestino, columnaDestino)
         for (int fila = 0; fila < 8; fila++) {
             for (int columna = 0; columna < 8; columna++) {
-
                 if (pieza.validarMovimiento(getTablero(), filaOriginal, columnaOriginal, fila, columna)) {
+                    //Optional<Pieza> piezaEncontrada = getTablero().getPieza(fila, columna);
+                    //if(piezaEncontrada.isPresent()) {
+                    //    Pieza piezaActual = piezaEncontrada.get();
+                    //    if(piezaActual.getTipo() == "rey") {
+                    //        System.out.println("Error encontrado");
+                    //    }
+                    //}
                     posicionesValidas.add(new int[]{fila, columna});  // Añade la posición válida
                 }
             }
