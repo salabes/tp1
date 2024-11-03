@@ -32,7 +32,7 @@ public class TableroController {
     private Juego juego;
     private Boolean coronacion = false;
     private TableroView tableroView;
-    private Boolean efectoSeleccionado = false;
+    private Boolean seAplicoEfecto = false;
     private MovimientosEspecialesController movimientosEspeciales;
     private EfectoController efectoController;// Vista del tablero
     private List<int[]> casillasResaltadas = new ArrayList<>();
@@ -220,7 +220,6 @@ public class TableroController {
     }
 
 
-
     public boolean chequearHackeMate(ActionEvent event, Pieza piezaAComer) throws Exception {
         boolean hayHackeMate = false;
         if(piezaAComer.getTipo() == "rey"){
@@ -239,7 +238,6 @@ public class TableroController {
     public void congelarRival(Color colorJugador) {
         if (juego.getColorJugadorTurnoActual() == colorJugador) {
             efectoController.setEfectoElejido(new Freeze());
-            this.efectoSeleccionado = true;
             this.freezar = true;
         }
     }
@@ -248,7 +246,6 @@ public class TableroController {
     public void protegerPropias(Color colorJugador) {
         if (juego.getColorJugadorTurnoActual() == colorJugador) {
             efectoController.setEfectoElejido(new Protect());
-            this.efectoSeleccionado = true;
             this.protection = true;
         }
     }
@@ -256,7 +253,6 @@ public class TableroController {
     public void permitirVuelo(Color colorJugador) {
         if (juego.getColorJugadorTurnoActual() == colorJugador) {
             efectoController.setEfectoElejido(new Volar());
-            this.efectoSeleccionado = true;
             this.volar = true; // Marca que el efecto de volar está activo
         }
     }
@@ -317,43 +313,12 @@ public class TableroController {
 
         Pieza piezaSeleccionada = juego.getTablero().getPieza(filaOriginal, columnaOriginal).get();
 
-        // Verifica si es el turno del jugador correcto
-        if (piezaSeleccionada.getColor() != juego.getColorJugadorTurnoActual()) {
-            if (efectoSeleccionado && freezar && piezaSeleccionada.getTipo() != "rey") {
-                efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
-                efectoSeleccionado = false;
-                if (piezaSeleccionada.getColor() == Color.BLANCO) {
-                    congeladorJugadorNegras.setDisable(true);
-                } else {
-                    congeladorJugadorBlancas.setDisable(true);
-                }
-                freezar = false;
-            } else {
-                return;
-            }
-        } else {
-            if (efectoSeleccionado && protection && piezaSeleccionada.getTipo() != "rey") {
-                efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
-                efectoSeleccionado = false;
-                if (piezaSeleccionada.getColor() == Color.NEGRO) {
-                    proteccionJugadorNegras.setDisable(true);
-                } else {
-                    proteccionJugadorBlancas.setDisable(true);
-                }
-                protection = false;
-            } else if (efectoSeleccionado && volar && piezaSeleccionada.getTipo() != "rey") {
-                efectoController.aplicarEfecto(vistaImagen, piezaSeleccionada);
-                efectoSeleccionado = false;
-                if (piezaSeleccionada.getColor() == Color.NEGRO) {
-                    volarJugadorNegras.setDisable(true);
-                } else {
-                    volarJugadorBlancas.setDisable(true);
-                }
-                volar = false;
-            } if(efectoSeleccionado && piezaSeleccionada.getTipo() == "rey"){
-                protection = false;
-                volar = false;
-            }
+        if(!seAplicoEfecto && !piezaSeleccionada.isefectoactivo()){
+            aplicarEfecto(piezaSeleccionada,vistaImagen);
+        }
+
+        if (piezaSeleccionada.getColor() != juego.getColorJugadorTurnoActual()){
+            return;
         }
 
         imagenPiezaSeleccionada = vistaImagen;
@@ -365,7 +330,6 @@ public class TableroController {
         desplazamientoY = eventoMouse.getSceneY() - vistaImagen.getTranslateY();
         vistaImagen.setMouseTransparent(true);  // Evita que se reciban eventos de mouse mientras se arrastra
         vistaImagen.toFront();
-        efectoSeleccionado = false;// Lleva la pieza al frente del panel
     }
 
     /**
@@ -457,15 +421,13 @@ public class TableroController {
             return;
         }
 
-
+        seAplicoEfecto = false;
         juego.siguienteTurno();
         descontarEfectos(this.juego,this.tableroView);
-        this.efectoSeleccionado = false;
 
         jugadorTurnoActual = juego.getJugadorTurnoActual();
         jugadorTurnoActual.iniciarTemporizador();
         this.jugadorTurnoActual.setText(jugadorTurnoActual.getNombre());
-
     }
 
 
@@ -526,5 +488,48 @@ public class TableroController {
         });
     }
 
+    private void aplicarEfecto(Pieza pieza,ImageView vistaImagen){
+        if(freezar){
+            if((pieza.getColor() != juego.getColorJugadorTurnoActual()) && pieza.getTipo() != "rey"){
+                efectoController.aplicarEfecto(vistaImagen,pieza);
+                seAplicoEfecto = true;
+
+                desactivarBotones(pieza);
+            }
+            freezar = false;
+
+        } else if(protection || volar){
+            if((pieza.getColor() == juego.getColorJugadorTurnoActual()) && pieza.getTipo() != "rey"){
+                efectoController.aplicarEfecto(vistaImagen,pieza);
+                seAplicoEfecto = true;
+
+                if(protection){
+                    desactivarBotones(pieza,proteccionJugadorBlancas,proteccionJugadorNegras);
+                }
+
+                if(volar){
+                    desactivarBotones(pieza,volarJugadorBlancas,volarJugadorNegras);
+                }
+            }
+            protection = false;
+            volar = false;
+
+        }
+    }
+
+    private void desactivarBotones(Pieza pieza,Button botonBlancas, Button botonNegras) {
+        if(pieza.getColor() == Color.BLANCO){
+            botonBlancas.setDisable(true);
+        } else {
+            botonNegras.setDisable(true);
+        }
+    }
+    private void desactivarBotones(Pieza pieza){
+        if(pieza.getColor() == Color.BLANCO){
+            congeladorJugadorNegras.setDisable(true);
+        } else {
+            congeladorJugadorBlancas.setDisable(true);
+        }
+    }
 }
 
