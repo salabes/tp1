@@ -77,7 +77,7 @@ public class Reina extends Pieza {
      * @return Tipo de la pieza (en este caso, "reina").
      */
     @Override
-    public String getTipo() {
-        return "reina"; // Tipo de pieza
+    public TipoPieza getTipo() {
+        return TipoPieza.REINA; // Tipo de pieza
     }
 }

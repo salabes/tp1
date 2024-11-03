@@ -188,7 +188,7 @@ public class TableroController {
                             if (piezaOptDestino.isPresent()) {
                                 Pieza piezaDestino = piezaOptDestino.get();
                                 // Si la pieza de destino es el rey, resaltar la casilla
-                                if (piezaDestino.getTipo().equals("rey")) {
+                                if (piezaDestino.getTipo().equals(TipoPieza.REY)) {
                                     tableroView.resaltarCasilla(piezaDestino.getFila(), piezaDestino.getColumna(), true);
                                 }
                             }
@@ -212,7 +212,7 @@ public class TableroController {
         }
         if(hayHackeMate == false){
             this.coronacion = movimientosEspeciales.chequearMovimientoEspecial(filaOriginal, columnaOriginal, filaDestino, columnaDestino);
-            if(piezaOptOrigen.get().getTipo() == "torre"){
+            if(piezaOptOrigen.get().getTipo() == TipoPieza.TORRE){
                 Torre pieza = (Torre) piezaOptOrigen.get();
                 pieza.marcarComoMovido();
             }
@@ -222,7 +222,7 @@ public class TableroController {
 
     public boolean chequearHackeMate(ActionEvent event, Pieza piezaAComer) throws Exception {
         boolean hayHackeMate = false;
-        if(piezaAComer.getTipo() == "rey"){
+        if(piezaAComer.getTipo() == TipoPieza.REY){
             hayHackeMate = true;
             String mensaje = "  WIN BLANCAS  ";
             if(juego.getColorJugadorTurnoActual() == Color.NEGRO ){
@@ -490,7 +490,7 @@ public class TableroController {
 
     private void aplicarEfecto(Pieza pieza,ImageView vistaImagen){
         if(freezar){
-            if((pieza.getColor() != juego.getColorJugadorTurnoActual()) && pieza.getTipo() != "rey"){
+            if((pieza.getColor() != juego.getColorJugadorTurnoActual()) && pieza.getTipo() != TipoPieza.REY){
                 efectoController.aplicarEfecto(vistaImagen,pieza);
                 seAplicoEfecto = true;
 
@@ -499,7 +499,7 @@ public class TableroController {
             freezar = false;
 
         } else if(protection || volar){
-            if((pieza.getColor() == juego.getColorJugadorTurnoActual()) && pieza.getTipo() != "rey"){
+            if((pieza.getColor() == juego.getColorJugadorTurnoActual()) && pieza.getTipo() != TipoPieza.REY){
                 efectoController.aplicarEfecto(vistaImagen,pieza);
                 seAplicoEfecto = true;
 

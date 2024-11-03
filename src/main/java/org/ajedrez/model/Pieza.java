@@ -60,16 +60,9 @@ public abstract class Pieza {
      *
      * @return Tipo de la pieza.
      */
-    public abstract String getTipo();
+    public abstract TipoPieza getTipo();
 
-    /**
-     * Método para obtener la ruta de la imagen de la pieza.
-     *
-     * @return Ruta de la imagen de la pieza.
-     */
-    public String getImagen() {
-        return "/org/ajedrez/imagenes/" + getTipo() + "_" + color.toString().toLowerCase() + ".png";
-    }
+
 
     /**
      * Valida si el movimiento de la pieza es válido.
@@ -94,12 +87,4 @@ public abstract class Pieza {
         }
         return false; // No hay efecto activo
     }
-
-    /**
-     * Valida si el movimiento de la pieza es válido cuando el efecto "Volar" está activo.
-     *
-     * @param nuevaFila Nueva fila de la pieza.
-     * @param nuevaColumna Nueva columna de la pieza.
-     * @return true si el movimiento de vuelo es válido, false en caso contrario.
-     */
 }

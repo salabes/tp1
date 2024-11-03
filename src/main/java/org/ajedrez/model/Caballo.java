@@ -63,7 +63,7 @@ public class Caballo extends Pieza {
      * @return Un string que representa el tipo de pieza ("caballo").
      */
     @Override
-    public String getTipo() {
-        return "caballo"; // Tipo de pieza
+    public TipoPieza getTipo() {
+        return TipoPieza.CABALLO; // Tipo de pieza
     }
 }

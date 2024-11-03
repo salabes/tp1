@@ -90,7 +90,7 @@ public class Peon extends Pieza {
      * @return El tipo de pieza, en este caso "peon".
      */
     @Override
-    public String getTipo() {
-        return "peon"; // Tipo de pieza
+    public TipoPieza getTipo() {
+        return TipoPieza.PEON; // Tipo de pieza
     }
 }

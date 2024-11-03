@@ -79,7 +79,7 @@ public class Torre extends Pieza {
                 Pieza posibleTorre = tablero.getPieza(oi, columnaTorre).orElse(null);
 
                 // Validar que el rey y la torre sean válidos y que la torre no haya sido movida
-                if (posibleRey.getTipo() == "rey" && posibleTorre.getTipo() == "torre" && !((Torre) posibleTorre).haMovido()) {
+                if (posibleRey.getTipo() == TipoPieza.REY && posibleTorre.getTipo() == TipoPieza.TORRE && !((Torre) posibleTorre).haMovido()) {
                     //System.out.println("Entro torre");
                     return true; // Movimiento válido de enroque
                 } else {
@@ -129,7 +129,7 @@ public class Torre extends Pieza {
      * @return Tipo de la pieza.
      */
     @Override
-    public String getTipo() {
-        return "torre"; // Tipo de pieza
+    public TipoPieza getTipo() {
+        return TipoPieza.TORRE; // Tipo de pieza
     }
 }

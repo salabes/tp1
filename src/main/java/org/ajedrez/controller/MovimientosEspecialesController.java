@@ -5,7 +5,13 @@ import org.ajedrez.model.*;
 import org.ajedrez.view.MovimientosEspecialesView;
 import org.ajedrez.view.PiezaView;
 
+
+
 import java.util.Optional;
+
+import org.ajedrez.model.Pieza;
+import org.ajedrez.model.Tablero;
+
 
 /**
  * Controlador para manejar movimientos especiales en el ajedrez, tales como enroque y coronación de peones.
@@ -59,13 +65,13 @@ public class MovimientosEspecialesController {
         chequearPiezaComida(tableroController.getTablero());
 
         // Si es un peón, verificar si llega a la coronación
-        if(pieza.getTipo() == "peon"){
+        if(pieza.getTipo() == TipoPieza.PEON){
             Peon peon = (Peon) pieza;
             huboCoronacion = chequearCoronar(peon);
         }
 
         // Si es un rey, verificar si puede realizar enroque
-        if (pieza.getTipo() == "rey") {
+        if (pieza.getTipo() == TipoPieza.REY) {
             int deltaColumna = this.columnaDestino - columnaOrigen;
             if (Math.abs(deltaColumna) == 2) {
                 chequearEnroque(deltaColumna);
@@ -81,7 +87,7 @@ public class MovimientosEspecialesController {
      * Además, mueve la pieza comida al área correspondiente de piezas eliminadas.
      * @param tablero El tablero donde se encuentra la pieza.
      */
-    public void chequearPiezaComida(Tablero tablero){
+/*     public void chequearPiezaComida(Tablero tablero){
         Optional<Pieza> piezaDestinoOpt = tablero.getPieza(this.filaDestino, this.columnaDestino);
 
         if (piezaDestinoOpt.isPresent()) {
@@ -96,7 +102,26 @@ public class MovimientosEspecialesController {
             PiezaView piezaView = new PiezaView(pieza.getImagen());
             tableroController.getPiezasEliminadasController().agregarPiezaEliminadaAGridPane(piezaView.getVistaPieza(),pieza.getColor());
         }
+    } */
+    public void chequearPiezaComida(Tablero tablero) {
+        Optional<Pieza> piezaDestinoOpt = tablero.getPieza(this.filaDestino, this.columnaDestino);
+    
+        if (piezaDestinoOpt.isPresent()) {
+            Pieza pieza = piezaDestinoOpt.get();
+            movimientosEspecialesView.comerPieza(tablero, pieza, this.filaDestino, this.columnaDestino);
+    
+            // Elimina la pieza del modelo
+            tablero.eliminarPieza(this.filaDestino, this.columnaDestino);
+    
+            // Usa `crearPiezaView` para obtener la vista específica de la pieza eliminada
+            PiezaView piezaView = tableroController.getTableroView().crearPiezaView(pieza);
+            tableroController.getPiezasEliminadasController().agregarPiezaEliminadaAGridPane(
+                piezaView.getVistaPieza(), pieza.getColor()
+            );
+        }
     }
+    
+
 
     /**
      * Verifica si un peón ha llegado a la última fila para coronarlo.
@@ -152,7 +177,7 @@ public class MovimientosEspecialesController {
         Optional<Pieza> torreOpt = tableroController.getTablero().getPieza(this.filaDestino, columnaOrigen);
 
         // Verificar que hay una torre para enrocar
-        if (torreOpt.isPresent() && torreOpt.get().getTipo() == "torre") {
+        if (torreOpt.isPresent() && torreOpt.get().getTipo() == TipoPieza.TORRE) {
             ImageView torreView = tableroController.getTableroView().obtenerVistaDePieza(torreOpt.get());
             if (torreView != null){
                 // Mueve la torre en la vista

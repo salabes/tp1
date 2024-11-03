@@ -76,7 +76,7 @@ public class Alfil extends Pieza {
      * @return Un string que representa el tipo de pieza ("alfil").
      */
     @Override
-    public String getTipo() {
-        return "alfil"; // Tipo de pieza
+    public TipoPieza getTipo() {
+        return TipoPieza.ALFIL; // Tipo de pieza
     }
 }
