@@ -1,7 +1,6 @@
 package org.ajedrez.model;
 
 import org.ajedrez.model.Efectos.Efecto;
-import org.ajedrez.model.Efectos.Volar;
 
 /**
  * Clase abstracta que representa una pieza en una partida de ajedrez.
@@ -38,6 +37,7 @@ public abstract class Pieza {
     public void setEfecto(Efecto efecto) {
         this.efecto = efecto; // Establece el efecto de la pieza
     }
+
 
     public Color getColor() {
         return color; // Retorna el color de la pieza

@@ -10,8 +10,8 @@ import javafx.util.Duration;
  */
 public class Temporizador {
     private int tiempoRestante; // Tiempo en segundos
-    private Label etiquetaTiempo; // Etiqueta para mostrar el tiempo
-    private Timeline timeline; // Línea de tiempo para gestionar el temporizador
+    private Timeline timeline;
+    private TemporizadorListener listener;// Línea de tiempo para gestionar el temporizador
 
     /**
      * Constructor que inicializa el temporizador con un tiempo en minutos.
@@ -35,15 +35,10 @@ public class Temporizador {
         return tiempoRestante;
     }
 
-    /**
-     * Establece la etiqueta donde se mostrará el tiempo restante.
-     *
-     * @param etiquetaTiempo La etiqueta a actualizar con el tiempo.
-     */
-    public void setEtiquetaTiempo(Label etiquetaTiempo) {
-        this.etiquetaTiempo = etiquetaTiempo;
-        actualizarEtiquetaTiempo(); // Actualiza la etiqueta inmediatamente al establecerla
+    public void setListener(TemporizadorListener listener) {
+        this.listener = listener;
     }
+
 
     /**
      * Inicia el temporizador.
@@ -65,19 +60,12 @@ public class Temporizador {
     private void decrementarTiempo() {
         if (tiempoRestante > 0) {
             tiempoRestante--; // Disminuye el tiempo restante
-            actualizarEtiquetaTiempo(); // Actualiza la visualización
+            if (listener != null) {
+                listener.onTiempoActualizado(tiempoRestante);
+            } // Actualiza la visualización
         } else {
             timeline.stop(); // Detiene el temporizador al llegar a cero
             // Manejar cuando el tiempo se agota (ej. fin del juego)
         }
-    }
-
-    /**
-     * Actualiza la etiqueta con el tiempo restante en formato mm:ss.
-     */
-    private void actualizarEtiquetaTiempo() {
-        int minutos = tiempoRestante / 60; // Calcula los minutos
-        int segundos = tiempoRestante % 60; // Calcula los segundos
-        etiquetaTiempo.setText(String.format("%02d:%02d", minutos, segundos)); // Establece el texto en formato mm:ss
     }
 }

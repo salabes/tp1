@@ -52,12 +52,6 @@ public abstract class Efecto {
         return efectoactivo; // Método para verificar si el efecto está activo.
     }
 
-    /**
-     * Aplica el efecto visual en el componente proporcionado.
-     *
-     * @param vista El componente de vista (ImageView) donde se aplicará el efecto.
-     */
-    public abstract void aplicarEfectoView(ImageView vista);
 
     /**
      * Establece la cantidad de turnos que el efecto estará activo.
@@ -69,5 +63,5 @@ public abstract class Efecto {
      *
      * @return Un String que representa el tipo de efecto.
      */
-    public abstract String getTipo();
+    public abstract TipoEfecto getTipo();
 }

@@ -2,6 +2,7 @@ package org.ajedrez.model;
 
 import java.util.Optional;
 import java.util.stream.IntStream;
+import org.ajedrez.model.Efectos.TipoEfecto;
 
 /**
  * Clase que representa la pieza Rey en una partida de ajedrez.
@@ -34,7 +35,7 @@ public class Rey extends Pieza {
     @Override
     public boolean validarMovimiento(Tablero tablero, int oi, int oj, int di, int dj) {
         // Verificar si hay un efecto de congelamiento activo
-        if (getEfecto() != null && getEfecto().getTipo() == "freeze") {
+        if (getEfecto() != null && getEfecto().getTipo() == TipoEfecto.FREEZE) {
             return false; // No se puede mover si está congelado
         }
 
@@ -69,7 +70,7 @@ public class Rey extends Pieza {
                 }
 
                 // Si el rey tiene un efecto de vuelo, el camino se considera libre
-                if (getEfecto() != null && getEfecto().getTipo() == "volar") {
+                if (getEfecto() != null && getEfecto().getTipo() == TipoEfecto.VOLAR) {
                     caminoLibre = true;
                 }
             }

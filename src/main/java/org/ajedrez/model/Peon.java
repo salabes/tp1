@@ -1,5 +1,8 @@
 package org.ajedrez.model;
 
+
+import org.ajedrez.model.Efectos.TipoEfecto;
+
 /**
  * Clase que representa un peón en una partida de ajedrez.
  */
@@ -31,7 +34,7 @@ public class Peon extends Pieza {
     @Override
     public boolean validarMovimiento(Tablero tablero, int filaOriginal, int columnaOriginal, int filaDestino, int columnaDestino) {
         // Verificar efecto de congelación
-        if (getEfecto() != null && getEfecto().getTipo() == "freeze") {
+        if (getEfecto() != null && getEfecto().getTipo() == TipoEfecto.FREEZE) {
             return false; // El peón no puede moverse si está congelado
         }
 
@@ -53,7 +56,7 @@ public class Peon extends Pieza {
                     return true; // Movimiento válido
                 }
                 // Verificar efecto de volar
-                if (filaDestino == filaOriginal + 2 * direccion && getEfecto() != null && getEfecto().getTipo() == "volar") {
+                if (filaDestino == filaOriginal + 2 * direccion && getEfecto() != null && getEfecto().getTipo() ==  TipoEfecto.VOLAR) {
                     return true; // Movimiento válido
                 }
             }

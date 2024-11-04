@@ -1,6 +1,7 @@
 package org.ajedrez.model;
 
 import java.util.List;
+import org.ajedrez.model.Efectos.TipoEfecto;
 
 /**
  * Clase que gestiona los turnos de los jugadores en el juego de ajedrez.

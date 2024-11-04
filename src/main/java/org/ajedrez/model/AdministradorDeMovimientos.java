@@ -1,5 +1,7 @@
 package org.ajedrez.model;
 
+import org.ajedrez.model.Efectos.TipoEfecto;
+
 import java.util.Optional;
 
 /**
@@ -25,7 +27,7 @@ public class AdministradorDeMovimientos {
         if (tablero.getPieza(filaDestino, columnaDestino).isPresent()) {
             Pieza piezaDest = tablero.getPieza(filaDestino, columnaDestino).get();
             // Verifica si la pieza destino tiene un efecto de protección
-            if (piezaDest.getEfecto() != null && piezaDest.getEfecto().getTipo() == "protect") {
+            if (piezaDest.getEfecto() != null && piezaDest.getEfecto().getTipo() == TipoEfecto.PROTECT) {
                 return true; // El movimiento es inválido debido a la protección
             }
         }

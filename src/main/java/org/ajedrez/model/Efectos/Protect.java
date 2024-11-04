@@ -31,21 +31,9 @@ public class Protect extends Efecto {
      * @return Un String que representa el tipo de efecto, en este caso "protect".
      */
     @Override
-    public String getTipo() {
-        return "protect"; // Implementar el tipo de efecto Protect.
+    public TipoEfecto getTipo() {
+        return TipoEfecto.PROTECT; // Implementar el tipo de efecto Protect.
     }
 
-    /**
-     * Aplica el efecto de protección visual en el componente proporcionado.
-     * Añade un efecto de sombra amarilla alrededor de la vista para indicar protección.
-     *
-     * @param vista El componente de vista (ImageView) donde se aplicará el efecto.
-     */
-    @Override
-    public void aplicarEfectoView(ImageView vista) {
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setColor(javafx.scene.paint.Color.YELLOW); // Color del resplandor.
-        dropShadow.setRadius(25); // Tamaño del resplandor.
-        vista.setEffect(dropShadow); // Aplica el efecto de sombra a la vista.
-    }
+
 }

@@ -2,6 +2,9 @@ package org.ajedrez.model;
 
 import java.util.stream.IntStream;
 
+import org.ajedrez.model.Efectos.Efecto;
+import org.ajedrez.model.Efectos.TipoEfecto;
+
 /**
  * Clase que representa una torre en el juego de ajedrez, heredando de la clase Pieza.
  */
@@ -33,7 +36,7 @@ public class Torre extends Pieza {
     public boolean validarMovimiento(Tablero tablero, int oi, int oj, int di, int dj) {
         //System.out.println("Entro a validar movimiento");
         // Verificar si la torre está congelada
-        if (getEfecto() != null && "freeze".equals(getEfecto().getTipo())) {
+        if (getEfecto() != null && getEfecto().getTipo() == TipoEfecto.FREEZE) {
             return false; // No puede moverse si está congelada
         }
 
@@ -54,53 +57,39 @@ public class Torre extends Pieza {
                 return false; // No se puede capturar una pieza del mismo color
             }
         }
-        boolean caminosLibre = IntStream.range(1, Math.max(idiff, jdiff))
-                .allMatch(x -> !tablero.estaOcupada(oi + isign * x, oj + jsign * x));
-        if (!caminosLibre) {
-            return false; // Camino obstruido
-        }
 
         // Si no hay efecto especial
-        if (this.getEfecto() == null) {
-            //System.out.println("ERRORRRRR");
+        if (this.getEfecto() == null || this.getEfecto().getTipo() != TipoEfecto.VOLAR) {
             // Verificar si el camino está libre
             boolean caminoLibre = IntStream.range(1, Math.max(idiff, jdiff))
                     .allMatch(x -> !tablero.estaOcupada(oi + isign * x, oj + jsign * x));
             if (!caminoLibre) {
                 return false; // Camino obstruido
             }
+        }
 
-            // Verificación del enroque
-            if (idiff == 0 && jdiff == 2 && (oi ==1)) { // Movimiento enroque
-                int columnaRey = 4;
-                int columnaTorre = (dj - oj) > 0 ? 7 : 0; // Enroque corto o largo
+        // Verificación del enroque
+        if (idiff == 0 && jdiff == 2 && (oi ==1)) { // Movimiento enroque
+            int columnaRey = 4;
+            int columnaTorre = (dj - oj) > 0 ? 7 : 0; // Enroque corto o largo
 
-                Pieza posibleRey = tablero.getPieza(oi, columnaRey).orElse(null);
-                Pieza posibleTorre = tablero.getPieza(oi, columnaTorre).orElse(null);
+            Pieza posibleRey = tablero.getPieza(oi, columnaRey).orElse(null);
+            Pieza posibleTorre = tablero.getPieza(oi, columnaTorre).orElse(null);
 
-                // Validar que el rey y la torre sean válidos y que la torre no haya sido movida
-                if (posibleRey.getTipo() == TipoPieza.REY && posibleTorre.getTipo() == TipoPieza.TORRE && !((Torre) posibleTorre).haMovido()) {
-                    //System.out.println("Entro torre");
-                    return true; // Movimiento válido de enroque
-                } else {
-                    return false; // Movimiento de enroque no válido
-                }
+            // Validar que el rey y la torre sean válidos y que la torre no haya sido movida
+            if (posibleRey.getTipo() == TipoPieza.REY && posibleTorre.getTipo() == TipoPieza.TORRE && !((Torre) posibleTorre).haMovido()) {
+                //System.out.println("Entro torre");
+                return true; // Movimiento válido de enroque
+            } else {
+                return false; // Movimiento de enroque no válido
             }
+        }
 
-            // Verificar si hay una pieza en la posición destino
-            if (tablero.estaOcupada(di, dj)) {
-                Pieza piezaDestino = tablero.getPieza(di, dj).get();
-                if (piezaDestino.getColor().equals(this.getColor())) {
-                    return false; // No se puede capturar una pieza del mismo color
-                }
-            }
-        } else if (getEfecto() != null && "volar".equals(getEfecto().getTipo())) {
-            // Si el efecto es "volar", se permite capturar
-            if (tablero.estaOcupada(di, dj)) {
-                Pieza piezaDestino = tablero.getPieza(di, dj).get();
-                if (piezaDestino.getColor().equals(this.getColor())) {
-                    return false; // No se puede capturar una pieza del mismo color
-                }
+        // Verificar si hay una pieza en la posición destino
+        if (tablero.estaOcupada(di, dj)) {
+            Pieza piezaDestino = tablero.getPieza(di, dj).get();
+            if (piezaDestino.getColor().equals(this.getColor())) {
+                return false; // No se puede capturar una pieza del mismo color
             }
         }
 

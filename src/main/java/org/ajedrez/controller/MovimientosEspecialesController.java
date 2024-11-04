@@ -154,7 +154,7 @@ public class MovimientosEspecialesController {
         tableroController.setearEventos(piezaView,this.filaDestino,this.columnaDestino);
 
         // Actualiza los temporizadores tras la coronación
-        tableroController.ActualizarTemporizadores();
+        tableroController.cambiarTurnos();
     }
 
     /**

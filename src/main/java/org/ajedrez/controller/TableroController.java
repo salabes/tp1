@@ -35,6 +35,7 @@ public class TableroController {
     private Boolean seAplicoEfecto = false;
     private MovimientosEspecialesController movimientosEspeciales;
     private EfectoController efectoController;// Vista del tablero
+    private TemporizadorController temporizadorController;
     private List<int[]> casillasResaltadas = new ArrayList<>();
     private ImageView imagenPiezaSeleccionada;  // Imagen de la pieza actualmente seleccionada
     private double desplazamientoX;  // Desplazamiento del mouse en el eje X al presionar la pieza
@@ -117,11 +118,9 @@ public class TableroController {
 
         // Actualiza la etiqueta del jugador blanco con su nombre y el temporizador correspondiente.
         this.jugadorBlancas.setText(jugadorBlancas.getNombre());
-        jugadorBlancas.getTemporizador().setEtiquetaTiempo(this.tiempoJugadorBlancas);
-
-        // Actualiza la etiqueta del jugador negro con su nombre y el temporizador correspondiente.
         this.jugadorNegras.setText(jugadorNegras.getNombre());
-        jugadorNegras.getTemporizador().setEtiquetaTiempo(this.tiempoJugadorNegras);
+
+        this.temporizadorController = new TemporizadorController(jugadorBlancas.getTemporizador(),jugadorNegras.getTemporizador(),tiempoJugadorBlancas,tiempoJugadorNegras);
     }
 
     public Tablero getTablero() {
@@ -369,7 +368,7 @@ public class TableroController {
             buscarHacke();
             resetearSoltarMouse(vistaImagen, nuevaFila, nuevaColumna);
             if (!coronacion) {
-                ActualizarTemporizadores();
+                cambiarTurnos();
             }
             //efectoSeleccionado = false;
             //protection = false;
@@ -399,9 +398,9 @@ public class TableroController {
         });
     }
 
-    public void ActualizarTemporizadores() {
+    public void cambiarTurnos() {
         Jugador jugadorTurnoActual = juego.getJugadorTurnoActual();
-        jugadorTurnoActual.pausarTemporizador();
+        temporizadorController.parar(jugadorTurnoActual);
 
         if (jugadorTurnoActual.getTemporizador().TiempoRestante() <= 0) {
             VentanaController ventanaController = new VentanaController();
@@ -426,7 +425,7 @@ public class TableroController {
         descontarEfectos(this.juego,this.tableroView);
 
         jugadorTurnoActual = juego.getJugadorTurnoActual();
-        jugadorTurnoActual.iniciarTemporizador();
+        temporizadorController.iniciar(jugadorTurnoActual);
         this.jugadorTurnoActual.setText(jugadorTurnoActual.getNombre());
     }
 
@@ -463,13 +462,6 @@ public class TableroController {
         for (int fila = 0; fila < 8; fila++) {
             for (int columna = 0; columna < 8; columna++) {
                 if (pieza.validarMovimiento(getTablero(), filaOriginal, columnaOriginal, fila, columna)) {
-                    //Optional<Pieza> piezaEncontrada = getTablero().getPieza(fila, columna);
-                    //if(piezaEncontrada.isPresent()) {
-                    //    Pieza piezaActual = piezaEncontrada.get();
-                    //    if(piezaActual.getTipo() == "rey") {
-                    //        System.out.println("Error encontrado");
-                    //    }
-                    //}
                     posicionesValidas.add(new int[]{fila, columna});  // Añade la posición válida
                 }
             }

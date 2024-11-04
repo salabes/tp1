@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import org.ajedrez.model.*;
 import org.ajedrez.model.Efectos.Efecto;
 import org.ajedrez.view.TableroView;
+import org.ajedrez.view.EfectoView;
 import java.util.Optional;
 
 /**
@@ -14,6 +15,7 @@ public class EfectoController {
 
     /** El efecto que ha sido seleccionado para aplicarse en una pieza. */
     private Efecto efectoElejido;
+    private EfectoView efectoView = new EfectoView();
 
     /**
      * Establece el efecto que será aplicado a una pieza.
@@ -47,8 +49,7 @@ public class EfectoController {
         // Activa el efecto en la pieza
         pieza.getEfecto().activarEfecto();
         // Aplica los cambios visuales del efecto en la vista de la pieza
-        pieza.getEfecto().aplicarEfectoView(vistaImagen);
-        //}
+        efectoView.aplicarEfectoView(pieza.getEfecto(), vistaImagen);
     }
 
     /**

@@ -1,4 +1,5 @@
 package org.ajedrez.model;
+import org.ajedrez.model.Efectos.TipoEfecto;
 
 /**
  * Clase que representa un Caballo en el juego de ajedrez.
@@ -29,7 +30,7 @@ public class Caballo extends Pieza {
     @Override
     public boolean validarMovimiento(Tablero tablero, int filaOriginal, int columnaOriginal, int filaDestino, int columnaDestino) {
         // Si la pieza tiene un efecto "freeze", no puede moverse
-        if (getEfecto() != null && getEfecto().getTipo() == "freeze") {
+        if (getEfecto() != null && getEfecto().getTipo() == TipoEfecto.FREEZE) {
             return false;
         }
 

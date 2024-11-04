@@ -32,21 +32,8 @@ public class Volar extends Efecto {
      * @return Un String que representa el tipo de efecto, en este caso "volar".
      */
     @Override
-    public String getTipo() {
-        return "volar"; // Tipo de efecto.
+    public TipoEfecto getTipo() {
+        return TipoEfecto.VOLAR; // Tipo de efecto.
     }
 
-    /**
-     * Aplica el efecto de volar visualmente en el componente proporcionado.
-     * Añade un efecto de sombra azul alrededor de la vista para indicar que puede volar.
-     *
-     * @param vista El componente de vista (ImageView) donde se aplicará el efecto.
-     */
-    @Override
-    public void aplicarEfectoView(ImageView vista) {
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setColor(javafx.scene.paint.Color.BLUE); // Color del resplandor.
-        dropShadow.setRadius(25); // Tamaño del resplandor.
-        vista.setEffect(dropShadow); // Aplica el efecto de sombra a la vista.
-    }
 }

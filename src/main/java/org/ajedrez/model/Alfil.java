@@ -1,6 +1,7 @@
 package org.ajedrez.model;
 
 import java.util.stream.IntStream;
+import org.ajedrez.model.Efectos.TipoEfecto;
 
 /**
  * Clase que representa un Alfil en el juego de ajedrez.
@@ -31,7 +32,7 @@ public class Alfil extends Pieza {
     @Override
     public boolean validarMovimiento(Tablero tablero, int oi, int oj, int di, int dj) {
         // Si la pieza tiene un efecto "freeze", no puede moverse
-        if (getEfecto() != null && getEfecto().getTipo() == "freeze") {
+        if (getEfecto() != null && getEfecto().getTipo() == TipoEfecto.FREEZE) {
             return false;
         }
 
@@ -48,7 +49,7 @@ public class Alfil extends Pieza {
                     .allMatch(x -> !tablero.estaOcupada(oi + isign * x, oj + jsign * x));
 
             // Si la pieza tiene un efecto "volar", el camino es considerado libre
-            if (getEfecto() != null && getEfecto().getTipo() == "volar") {
+            if (getEfecto() != null && getEfecto().getTipo() == TipoEfecto.VOLAR) {
                 caminoLibre = true;
             }
 

@@ -1,6 +1,7 @@
 package org.ajedrez.model;
 
 import java.util.stream.IntStream;
+import org.ajedrez.model.Efectos.TipoEfecto;
 
 /**
  * Clase que representa la pieza Reina en una partida de ajedrez.
@@ -31,7 +32,7 @@ public class Reina extends Pieza {
     @Override
     public boolean validarMovimiento(Tablero tablero, int oi, int oj, int di, int dj) {
         // Verificar si hay un efecto de congelamiento activo
-        if (getEfecto() != null && getEfecto().getTipo() == "freeze") {
+        if (getEfecto() != null && getEfecto().getTipo() == TipoEfecto.FREEZE) {
             return false; // No se puede mover si está congelada
         }
 
@@ -49,7 +50,7 @@ public class Reina extends Pieza {
                     .allMatch(x -> !tablero.estaOcupada(oi + isign * x, oj + jsign * x));
 
             // Si la Reina tiene un efecto de vuelo, el camino se considera libre
-            if (getEfecto() != null && getEfecto().getTipo() == "volar") {
+            if (getEfecto() != null && getEfecto().getTipo() == TipoEfecto.VOLAR) {
                 caminoLibre = true;
             }
 
