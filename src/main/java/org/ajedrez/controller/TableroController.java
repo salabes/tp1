@@ -164,40 +164,20 @@ public class TableroController {
         }
     }
 
-    public void buscarHacke() {
+    private void buscarHacke(Tablero tablero) {
         // Recorrer todas las filas y columnas del tablero (8x8), versión 3
-        try{
-            for (int fila = 0; fila < 8; fila++) {
-                for (int columna = 0; columna < 8; columna++) {
-                    // Verificar si hay una pieza en la posición actual (fila, columna)
-                    Optional<Pieza> piezaOpt = getTablero().getPieza(fila, columna);
+        Pieza reyBlanco = tablero.getRey(Color.BLANCO);
+        Pieza reyNegro = tablero.getRey(Color.NEGRO);
 
-                    if (piezaOpt.isPresent()) {
-                        Pieza pieza = piezaOpt.get();
-                        // Obtener las posiciones válidas para la pieza actual
-                        List<int[]> posicionesFinales = obtenerPosicionesValidas(pieza, fila, columna);
+        buscarHackeRey(tablero, reyBlanco, tablero.getPiezasNegras());
+        buscarHackeRey(tablero, reyNegro, tablero.getPiezasBlancas());
+    }
 
-                        // Recorrer las posibles posiciones de destino
-                        for (int[] posicion : posicionesFinales) {
-                            // Verificar si hay una pieza en la posición de destino
-
-                            Optional<Pieza> piezaOptDestino = getTablero().getPieza(posicion[0], posicion[1]);
-
-
-                            if (piezaOptDestino.isPresent()) {
-                                Pieza piezaDestino = piezaOptDestino.get();
-                                // Si la pieza de destino es el rey, resaltar la casilla
-                                if (piezaDestino.getTipo().equals(TipoPieza.REY)) {
-                                    tableroView.resaltarCasilla(piezaDestino.getFila(), piezaDestino.getColumna(), true);
-                                }
-                            }
-                        }
-                    }
-                }
+    private void buscarHackeRey(Tablero tablero,Pieza rey,List<Pieza> piezasEnemigas){
+        for(Pieza pieza: piezasEnemigas){
+            if (pieza.validarMovimiento(tablero, pieza.getFila(), pieza.getColumna(), rey.getFila(), rey.getColumna())){
+                
             }
-        } catch (RuntimeException e) {
-            System.out.println("Excepción capturada: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -365,7 +345,7 @@ public class TableroController {
             verificarMovimiento(null, filaOriginal, columnaOriginal,nuevaFila, nuevaColumna);
             //mueve Pieza en tablero view y en modelo
             tableroView.moverPieza(vistaImagen, filaOriginal, columnaOriginal, nuevaFila, nuevaColumna);
-            buscarHacke();
+            buscarHacke(getTablero());
             resetearSoltarMouse(vistaImagen, nuevaFila, nuevaColumna);
             if (!coronacion) {
                 cambiarTurnos();

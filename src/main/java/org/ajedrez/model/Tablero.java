@@ -1,6 +1,7 @@
 package org.ajedrez.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -9,7 +10,8 @@ import java.util.Optional;
  */
 public class Tablero {
     private Casillero[][] casilleros;  // Matriz que representa los casilleros del tablero
-    private ArrayList<Pieza> piezas;     // Lista que contiene las piezas en el tablero
+    private List<Pieza> piezasBlancas;     // Lista que contiene las piezas en el tablero
+    private List<Pieza> piezasNegras;
     private int cantPiezas;              // Cantidad total de piezas en el tablero
 
     /**
@@ -17,13 +19,14 @@ public class Tablero {
      * Inicializa los casilleros y las piezas del tablero.
      */
     public Tablero() {
-        piezas = new ArrayList<Pieza>();
         casilleros = new Casillero[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 casilleros[i][j] = new Casillero(); // Crea un nuevo casillero
             }
         }
+        this.piezasBlancas = new ArrayList<>();
+        this.piezasNegras = new ArrayList<>();
         inicializarTablero(); // Llama al método para inicializar el tablero con piezas
     }
 
@@ -33,51 +36,51 @@ public class Tablero {
     private void inicializarTablero() {
         // Inicializa las piezas negras
         casilleros[0][0].setPieza(new Torre(Color.NEGRO, 0, 0));
-        this.piezas.add(casilleros[0][0].getPieza());
+        this.piezasNegras.add(casilleros[0][0].getPieza());
         casilleros[0][1].setPieza(new Caballo(Color.NEGRO, 0, 1));
-        this.piezas.add(casilleros[0][1].getPieza());
+        this.piezasNegras.add(casilleros[0][1].getPieza());
         casilleros[0][2].setPieza(new Alfil(Color.NEGRO, 0, 2));
-        this.piezas.add(casilleros[0][2].getPieza());
+        this.piezasNegras.add(casilleros[0][2].getPieza());
         casilleros[0][3].setPieza(new Reina(Color.NEGRO, 0, 3));
-        this.piezas.add(casilleros[0][3].getPieza());
+        this.piezasNegras.add(casilleros[0][3].getPieza());
         casilleros[0][4].setPieza(new Rey(Color.NEGRO, 0, 4));
-        this.piezas.add(casilleros[0][4].getPieza());
+        this.piezasNegras.add(casilleros[0][4].getPieza());
         casilleros[0][5].setPieza(new Alfil(Color.NEGRO, 0, 5));
-        this.piezas.add(casilleros[0][5].getPieza());
+        this.piezasNegras.add(casilleros[0][5].getPieza());
         casilleros[0][6].setPieza(new Caballo(Color.NEGRO, 0, 6));
-        this.piezas.add(casilleros[0][6].getPieza());
+        this.piezasNegras.add(casilleros[0][6].getPieza());
         casilleros[0][7].setPieza(new Torre(Color.NEGRO, 0, 7));
-        this.piezas.add(casilleros[0][7].getPieza());
+        this.piezasNegras.add(casilleros[0][7].getPieza());
 
         // Inicializa los peones negros
         for (int i = 0; i < 8; i++) {
             casilleros[1][i].setPieza(new Peon(Color.NEGRO, 1, i));
-            this.piezas.add(casilleros[1][i].getPieza());
+            this.piezasNegras.add(casilleros[1][i].getPieza());
         }
 
         // Inicializa los peones blancos
         for (int i = 0; i < 8; i++) {
             casilleros[6][i].setPieza(new Peon(Color.BLANCO, 6, i));
-            this.piezas.add(casilleros[6][i].getPieza());
+            this.piezasBlancas.add(casilleros[6][i].getPieza());
         }
 
         // Inicializa las piezas blancas
         casilleros[7][0].setPieza(new Torre(Color.BLANCO, 7, 0));
-        this.piezas.add(casilleros[7][0].getPieza());
+        this.piezasBlancas.add(casilleros[7][0].getPieza());
         casilleros[7][1].setPieza(new Caballo(Color.BLANCO, 7, 1));
-        this.piezas.add(casilleros[7][1].getPieza());
+        this.piezasBlancas.add(casilleros[7][1].getPieza());
         casilleros[7][2].setPieza(new Alfil(Color.BLANCO, 7, 2));
-        this.piezas.add(casilleros[7][2].getPieza());
+        this.piezasBlancas.add(casilleros[7][2].getPieza());
         casilleros[7][3].setPieza(new Reina(Color.BLANCO, 7, 3));
-        this.piezas.add(casilleros[7][3].getPieza());
+        this.piezasBlancas.add(casilleros[7][3].getPieza());
         casilleros[7][4].setPieza(new Rey(Color.BLANCO, 7, 4));
-        this.piezas.add(casilleros[7][4].getPieza());
+        this.piezasBlancas.add(casilleros[7][4].getPieza());
         casilleros[7][5].setPieza(new Alfil(Color.BLANCO, 7, 5));
-        this.piezas.add(casilleros[7][5].getPieza());
+        this.piezasBlancas.add(casilleros[7][5].getPieza());
         casilleros[7][6].setPieza(new Caballo(Color.BLANCO, 7, 6));
-        this.piezas.add(casilleros[7][6].getPieza());
+        this.piezasBlancas.add(casilleros[7][6].getPieza());
         casilleros[7][7].setPieza(new Torre(Color.BLANCO, 7, 7));
-        this.piezas.add(casilleros[7][7].getPieza());
+        this.piezasBlancas.add(casilleros[7][7].getPieza());
 
         this.cantPiezas = 32; // Establece la cantidad total de piezas en el tablero
     }
@@ -105,8 +108,11 @@ public class Tablero {
      * @param columnaNueva   Columna de la nueva posición
      */
     public void moverPieza(int filaOriginal, int columnaOriginal, int filaNueva, int columnaNueva) {
+        Pieza piezaAMover = casilleros[filaOriginal][columnaOriginal].getPieza();
         casilleros[filaNueva][columnaNueva].setPieza(casilleros[filaOriginal][columnaOriginal].getPieza());
         casilleros[filaOriginal][columnaOriginal].setPieza(null); // Elimina la pieza de la posición original
+        piezaAMover.setColumna(columnaNueva);
+        piezaAMover.setFila(filaNueva);
     }
 
     /**
@@ -129,9 +135,18 @@ public class Tablero {
      */
     public void agregarPieza(Pieza pieza, int fila, int columna) {
         casilleros[fila][columna].setPieza(pieza); // Establece la pieza en el casillero
-        piezas.add(pieza); // Agrega la pieza a la lista de piezas
+        agregarPiezaALista(pieza); // Agrega la pieza a la lista de piezas
+        pieza.setColumna(columna);
+        pieza.setFila(fila);
         this.cantPiezas++; // Incrementa la cantidad de piezas
-        System.out.println(cantPiezas);
+    }
+
+    private void agregarPiezaALista(Pieza pieza){
+        if(pieza.getColor() == Color.BLANCO){
+            piezasBlancas.add(pieza);
+        } else {
+            piezasNegras.add(pieza);
+        }
     }
 
     /**
@@ -154,9 +169,11 @@ public class Tablero {
      */
     public void eliminarPieza(int fila, int columna) {
         this.casilleros[fila][columna].setPieza(null); // Elimina la pieza del casillero
-        piezas.removeIf(pieza -> pieza.getFila() == fila && pieza.getColumna() == columna); // Elimina la pieza de la lista
+        piezasBlancas.removeIf(pieza -> pieza.getFila() == fila && pieza.getColumna() == columna);
+        piezasNegras.removeIf(pieza -> pieza.getFila() == fila && pieza.getColumna() == columna);// Elimina la pieza de la lista
         this.cantPiezas--; // Decrementa la cantidad de piezas
     }
+
 
     /**
      * Método que obtiene la cantidad total de piezas en el tablero.
@@ -167,13 +184,21 @@ public class Tablero {
         return cantPiezas; // Devuelve la cantidad total de piezas
     }
 
-    /**
-     * Método que obtiene la lista de piezas en el tablero.
-     *
-     * @return Un ArrayList que contiene todas las piezas del tablero.
-     */
-    public ArrayList<Pieza> getPiezas() {
-        return piezas; // Devuelve la lista de piezas
+    public Pieza getRey(Color color) {
+        List<Pieza> piezas = (color == Color.BLANCO) ? piezasBlancas : piezasNegras;
+
+        return piezas.stream()
+                .filter(p -> p.getTipo().equals(TipoPieza.REY)) // Busca un objeto de tipo Rey
+                .findFirst()
+                .orElse(null); // Devuelve el Rey si lo encuentra o null si no está
+    }
+
+    public List<Pieza> getPiezasBlancas(){
+        return this.piezasBlancas;
+    }
+
+    public List<Pieza> getPiezasNegras(){
+        return this.piezasBlancas;
     }
 
 

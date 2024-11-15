@@ -1,5 +1,6 @@
 package org.ajedrez.model;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import org.ajedrez.model.Efectos.Efecto;
@@ -68,22 +69,25 @@ public class Torre extends Pieza {
             }
         }
 
+
         // Verificación del enroque
-        if (idiff == 0 && jdiff == 2 && (oi ==1)) { // Movimiento enroque
+        /*if (idiff == 0 && jdiff == 2) { // Enroque
             int columnaRey = 4;
-            int columnaTorre = (dj - oj) > 0 ? 7 : 0; // Enroque corto o largo
+            int columnaTorre = (dj - oj) > 0 ? 7 : 0; // Enroque corto: torre en 7, largo: torre en 0
 
-            Pieza posibleRey = tablero.getPieza(oi, columnaRey).orElse(null);
-            Pieza posibleTorre = tablero.getPieza(oi, columnaTorre).orElse(null);
+            Optional<Pieza> rey = tablero.getPieza(oi, columnaRey);
+            Optional<Pieza> torre = tablero.getPieza(oi, columnaTorre);
 
-            // Validar que el rey y la torre sean válidos y que la torre no haya sido movida
-            if (posibleRey.getTipo() == TipoPieza.REY && posibleTorre.getTipo() == TipoPieza.TORRE && !((Torre) posibleTorre).haMovido()) {
-                //System.out.println("Entro torre");
-                return true; // Movimiento válido de enroque
-            } else {
-                return false; // Movimiento de enroque no válido
+            if(rey.isPresent() && torre.isPresent()){
+                if (rey.get().getTipo() == TipoPieza.REY &&
+                        torre.get().getTipo() == TipoPieza.TORRE && !((Torre) torre.get()).haMovido()) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
-        }
+
+        }*/
 
         // Verificar si hay una pieza en la posición destino
         if (tablero.estaOcupada(di, dj)) {

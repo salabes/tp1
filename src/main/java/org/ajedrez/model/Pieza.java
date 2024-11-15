@@ -27,6 +27,7 @@ public abstract class Pieza {
     // Métodos de acceso (setters y getters)
 
     public void setFila(int fila) {
+
         this.fila = fila; // Establece la fila de la pieza
     }
 
@@ -44,6 +45,7 @@ public abstract class Pieza {
     }
 
     public int getFila() {
+
         return fila; // Retorna la fila actual de la pieza
     }
 
