@@ -328,15 +328,11 @@ public class TableroController {
     }
 
     public void terminarJacqueMate(ActionEvent event, Color color) throws Exception {
-
-
         String mensaje = (color == Color.BLANCO) ? "  WIN BLANCAS  " : "  WIN NEGRAS  ";
 
         VentanaController ventanaController = new VentanaController();
         ventanaController.reutilizarVentanaInicial(event, mensaje, jugadorBlancas);
     }
-
-
 
     public void setearEventos(PiezaView piezaView, int filaFinal, int columnaFinal) {
         // Agregar manejadores de eventos del mouse

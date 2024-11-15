@@ -83,20 +83,5 @@ public class EfectoController {
                 }
             }
         }
-
-        // ¡Comentario indicando que esta implementación se realizó por limitaciones temporales
-        /*
-        // Código alternativo comentado que utiliza una lista de piezas
-        for (int i = 0; i < juego.getTablero().getCantPiezas(); i++) {
-            Pieza pieza = piezasTablero.get(i);
-            if (pieza.getEfecto() != null) {
-                if (!pieza.getEfecto().descontarTiempo()) { // Si el tiempo ha terminado
-                    tableroView.obtenerVistaDePieza(pieza).setEffect(null);
-                    tableroView.obtenerVistaDePieza(pieza).setOpacity(1);
-                    pieza.setEfecto(null); // Resetea el efecto de la pieza
-                }
-            }
-        }
-        */
     }
 }

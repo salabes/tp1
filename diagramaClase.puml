@@ -81,8 +81,8 @@ package "Model"{
         + getFila(): int
         + getColumna(): int
         + getEfecto(): Efecto
-        + getImagen(): String
-        + getTipo(): String
+        + isEfectoActivo(): Boolean
+        + getTipo(): TipoPieza
         + validarMovimiento(tablero: Tablero, filaOriginal: int, columnaOriginal: int, filaDestino: int, columnaDestino: int): boolean
     }
 
@@ -92,36 +92,35 @@ package "Model"{
 
         + Efecto()
         + activarEfecto()
-        + descontarTiempo(): boolean
-        + aplicarEfectoView(vista: ImageView)
+        + descontarTiempo(): Boolean
+        + isEfectoActivo(): Boolean
         + setCantidadTurnosActivos()
-        + getTipo(): String
+        + getTipo(): TipoEfecto
     }
 
     class Freeze extends Efecto {
         + Freeze()
         + setCantidadTurnosActivos()
-        + getTipo(): String
-        + aplicarEfectoView(vista: ImageView)
+        + getTipo(): TipoEfecto
     }
 
     class Protect extends Efecto {
         + Protect()
         + setCantidadTurnosActivos()
-        + getTipo(): String
-        + aplicarEfectoView(vista: ImageView)
+        + getTipo(): TipoEfecto
     }
 
     class Volar extends Efecto{
         +Volar()
-        +void setCantidadTurnosActivos()
-        +String getTipo()
-        +void aplicarEfectoView(ImageView vista)
+        +setCantidadTurnosActivos()
+        +getTipo(): TipoEfecto
     }
 
 
     class AdministradorDeMovimientos {
         + movimientoInValido(tablero: Tablero, filaOriginal: int, columnaOriginal: int, filaDestino: int, columnaDestino: int): boolean
+        + hayJaque(Tablero tablero, Color color): Boolean
+        + obtenerPosicionesValidas(Tablero tablero, Pieza pieza, int filaOriginal, int ColumnaOriginal): List<int[]>
     }
 
     class AdministradorDeTurnos {
@@ -136,23 +135,23 @@ package "Model"{
 
     class Alfil extends Pieza {
         + validarMovimiento(tablero: Tablero, oi: int, oj: int, di: int, dj: int): boolean
-        + getTipo(): String
+        + getTipo(): TipoPieza
     }
 
     class Caballo extends Pieza {
         + validarMovimiento(tablero: Tablero, filaOriginal: int, columnaOriginal: int, filaDestino: int, columnaDestino: int): boolean
-        + getTipo(): String
+        + getTipo(): TipoPieza
     }
 
     class Peon extends Pieza {
         + validarMovimiento(tablero: Tablero, filaOriginal: int, columnaOriginal: int, filaDestino: int, columnaDestino: int): boolean
         + haLlegadoAFilaFinal(fila: int): boolean
-        + getTipo(): String
+        + getTipo(): TipoPieza
     }
 
     class Reina extends Pieza {
         + validarMovimiento(tablero: Tablero, oi: int, oj: int, di: int, dj: int): boolean
-        + getTipo(): String
+        + getTipo(): TipoPieza
     }
 
     class Rey extends Pieza {
@@ -160,7 +159,7 @@ package "Model"{
         + validarMovimiento(tablero: Tablero, oi: int, oj: int, di: int, dj: int): boolean
         + marcarComoMovido()
         + haMovido(): boolean
-        + getTipo(): String
+        + getTipo(): TipoPieza
     }
 
     class Torre extends Pieza {
@@ -168,7 +167,7 @@ package "Model"{
         + validarMovimiento(tablero: Tablero, oi: int, oj: int, di: int, dj: int): boolean
         + marcarComoMovido()
         + haMovido(): boolean
-        + getTipo(): String
+        + getTipo(): TipoPieza
     }
 
     class Temporizador {
@@ -176,11 +175,30 @@ package "Model"{
         - Label etiquetaTiempo
         - Timeline timeline
         + Temporizador(minutosIniciales: int)
-        + setEtiquetaTiempo(etiquetaTiempo: Label)
+        + TiempoRestante()
+        + setListener(TemporizadorListener listener)
         + iniciar()
         + pausar()
         - decrementarTiempo()
-        - actualizarEtiquetaTiempo()
+    }
+
+    interface TemporizadorListener {
+        +void onTiempoActualizado(int tiempoRestante)
+    }
+
+    enum TipoPieza {
+        REY
+        REINA
+        TORRE
+        ALFIL
+        CABALLO
+        PEON
+    }
+
+    enum TipoEfecto {
+        VOLAR,
+        FREEZE,
+        PROTECT;
     }
 
     enum Color {
@@ -209,6 +227,7 @@ package "Controladores" {
 
     class EfectoController {
         - Efecto efectoElejido
+        - EfectoView efectoView
         + void setEfectoElejido(Efecto efectoElejido)
         + Efecto getEfectoElejido()
         + void aplicarEfecto(ImageView vistaImagen, Pieza pieza)
@@ -252,13 +271,13 @@ package "Controladores" {
     }
 
     class TableroController {
-
         - Juego juego
         - Boolean coronacion
         - TableroView tableroView
-        - Boolean efectoSeleccionado
+        - Boolean seAplicoEfecto
         - MovimientosEspecialesController movimientosEspeciales
         - EfectoController efectoController
+        - TemporizadorController temporizadorController
         - List<int[]> casillasResaltadas
         - ImageView imagenPiezaSeleccionada
         - double desplazamientoX
@@ -281,7 +300,6 @@ package "Controladores" {
         - Button proteccionJugadorNegras
         - Button volarJugadorBlancas
         - Button volarJugadorNegras
-
         + void initialize()
         + void InicializarTablero()
         + void cargarTablero()
@@ -292,9 +310,7 @@ package "Controladores" {
         + PiezasEliminadasController getPiezasEliminadasController()
         + void rendirse(ActionEvent event)
         + void tablas(ActionEvent event)
-        + void buscarHacke()
-        + void verificarMovimiento(ActionEvent event, int filaOriginal, int columnaOriginal, int filaDestino, int columnaDestino)
-        + boolean chequearHackeMate(ActionEvent event, Pieza piezaAComer)
+        + void verificarMovimientoEspecial(int filaOriginal, int columnaOriginal, int filaDestino, int columnaDestino)
         + void congelarRival(Color colorJugador)
         + void protegerPropias(Color colorJugador)
         + void permitirVuelo(Color colorJugador)
@@ -304,13 +320,23 @@ package "Controladores" {
         + void alPresionarConMouse(MouseEvent eventoMouse, ImageView vistaImagen)
         + void alArrastrarConMouse(MouseEvent eventoMouse, ImageView vistaImagen)
         + void alSoltarMouse(ImageView vistaImagen, int filaOriginal, int columnaOriginal)
+        + void terminarJacqueMate(ActionEvent event, Color color)
         + void setearEventos(PiezaView piezaView, int filaFinal, int columnaFinal)
-        + void ActualizarTemporizadores()
-        + void resaltarCasillas(Pieza piezaSeleccionada, int filaOriginal, int columnaOriginal, boolean resaltar)
-        + void desresaltarCasillas(int filaOriginal, int columnaOriginal)
-        + List<int[]> obtenerPosicionesValidas(Pieza pieza, int filaOriginal, int columnaOriginal)
+        + void cambiarTurnos()
         + void resetearSoltarMouse(ImageView vistaImagen, int nuevaFila, int nuevaColumna)
+        - void resaltarCasillas(Pieza piezaSeleccionada, int filaOriginal, int columnaOriginal, boolean resaltar)
+        - void desresaltarCasillas(int filaOriginal, int columnaOriginal)
+        - List<int[]> obtenerPosicionesValidas(Pieza pieza, int filaOriginal, int columnaOriginal)
+        - void aplicarEfecto(Pieza pieza, ImageView vistaImagen)
+        - void desactivarBotones(Pieza pieza, Button botonBlancas, Button botonNegras)
+    }
 
+    class TemporizadorController {
+        -TemporizadorView temporizadorViewBlancas
+        -TemporizadorView temporizadorViewNegras
+        +TemporizadorController(Temporizador temporizadorBlancas, Temporizador temporizadorNegras, Label etiquetaTemporizadorBlancas, Label etiquetaTemporizadorNegras)
+        +void iniciar(Jugador jugador)
+        +void parar(Jugador jugador)
     }
 
     class VentanaController {
@@ -341,6 +367,7 @@ package "Vistas" {
     class PiezaView {
         - final ImageView vistaPieza
         + PiezaView(String rutaImagen)
+        + construirRutaImagen(Pieza pieza)
         + ImageView getVistaPieza()
         + void resaltar()
         + void quitarResaltado()
@@ -368,6 +395,49 @@ package "Vistas" {
         + void moverPieza(ImageView vistaImagen, int filaOrigen, int columnaOrigen, int filaDestino, int columnaDestino)
     }
 
+    class AlfilView extends PiezaView {
+        +AlfilView(Pieza pieza)
+        +String construirRutaImagen(Pieza pieza)
+    }
+
+    class CaballoView extends PiezaView {
+        +CaballoView(Pieza pieza)
+        +String construirRutaImagen(Pieza pieza)
+    }
+
+    class EfectoView {
+        +void aplicarEfectoView(Efecto efecto, ImageView vista)
+        +void aplicarEfectoProtect(ImageView vista)
+        +void aplicarEfectoViewVolar(ImageView vista)
+        +void aplicarEfectoViewFreeze(ImageView vista)
+    }
+
+    class PeonView extends PiezaView {
+        +PeonView(Pieza pieza)
+        +String construirRutaImagen(Pieza pieza)
+    }
+
+    class ReinaView extends PiezaView {
+        +ReinaView(Pieza pieza)
+        +String construirRutaImagen(Pieza pieza)
+    }
+
+    class ReyView extends PiezaView {
+        +ReyView(Pieza pieza)
+        +String construirRutaImagen(Pieza pieza)
+    }
+
+    class TemporizadorView {
+        -Label etiquetaTiempo
+        +TemporizadorView(Label etiquetaTiempo)
+        +void actualizarTiempo(int tiempoRestante)
+    }
+
+    class TorreView extends PiezaView {
+        +TorreView(Pieza pieza)
+        +String construirRutaImagen(Pieza pieza)
+    }
+
 }
 
 Juego "1" o-- "2" Jugador
@@ -380,10 +450,15 @@ Juego "1" ..> "1"AdministradorDeMovimientos
 Jugador "1" --> "1"Temporizador
 Jugador "1" ..> "1"Color
 
-Pieza "1" ..> "0..1" Efecto
 Pieza "1" o-- "0..1" Efecto
+Pieza "1" ..> "0..1" Efecto
 Pieza "1" o-- "1" Color
 Pieza "1" ..> "1" Color
+Pieza "1" o-- "1" TipoPieza
+Pieza "1" ..> "1" TipoPieza
+
+Efecto "1" o-- "1" TipoEfecto
+Efecto "1" ..> "1" TipoEfecto
 
 Casillero "1" o-- "0..1"Pieza
 Casillero "1" ..> "0..1" Pieza
@@ -403,6 +478,13 @@ CoronarController "1" ..> "1" MovimientosEspecialesController
 EfectoController "1" ..> "1" Pieza
 EfectoController "1" ..> "1" Efecto
 EfectoController "1" o-- "1" Efecto
+EfectoController "1" ..> "1" EfectoView
+EfectoController "1" o-- "1" EfectoView
+
+Temporizador ..> TemporizadorListener
+
+TemporizadorController "1" ..> "1" TemporizadorListener
+TemporizadorController "1" ..> "1" TemporizadorView
 
 JuegoController "1" o-- "1" Juego
 JuegoController "1" o-- "2" Color
@@ -423,6 +505,7 @@ TableroController "1" ..> "1" TableroView
 TableroController "1" o-- "1" EfectoController
 TableroController "1" ..> "1" VentanaController
 TableroController "1" o-- "1" PiezasEliminadasController
+TableroController "1" o-- "1" TemporizadorController
 
 VentanaController "1" ..> "1" Color
 
