@@ -3,10 +3,12 @@ package org.ajedrez.controller;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
-import org.ajedrez.model.*;
+import org.ajedrez.model.Color;
+import org.ajedrez.model.Juego;
+import org.ajedrez.model.Jugador;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-
+import org.ajedrez.model.Temporizador;
 import java.util.ArrayList;
 import java.util.List;
 

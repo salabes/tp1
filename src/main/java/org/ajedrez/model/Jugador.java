@@ -1,14 +1,12 @@
 package org.ajedrez.model;
 
-import java.util.List;
-
 /**
  * Clase que representa a un jugador en una partida de ajedrez.
  */
 public class Jugador {
     private String nombre; // Nombre del jugador
     private Color color; // Color de las piezas del jugador
-    private Temporizador tiempo;// Temporizador asociado al jugador
+    private Temporizador tiempo; // Temporizador asociado al jugador
 
     /**
      * Constructor de la clase Jugador.

@@ -218,9 +218,6 @@ public class TableroView {
     public void moverPieza(ImageView vistaImagen, int filaOrigen, int columnaOrigen, int filaDestino,
                            int columnaDestino) throws Exception {
 
-        // Realizar el movimiento en el modelo
-        tablero.moverPieza(filaOrigen, columnaOrigen, filaDestino, columnaDestino);
-
         // Actualizar la columna y fila en el GridPane
         GridPane.setColumnIndex(vistaImagen, columnaDestino);
         GridPane.setRowIndex(vistaImagen, filaDestino);

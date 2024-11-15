@@ -164,53 +164,13 @@ public class TableroController {
         }
     }
 
-    private void buscarHacke(Tablero tablero) {
-        // Recorrer todas las filas y columnas del tablero (8x8), versión 3
-        Pieza reyBlanco = tablero.getRey(Color.BLANCO);
-        Pieza reyNegro = tablero.getRey(Color.NEGRO);
-
-        buscarHackeRey(tablero, reyBlanco, tablero.getPiezasNegras());
-        buscarHackeRey(tablero, reyNegro, tablero.getPiezasBlancas());
-    }
-
-    private void buscarHackeRey(Tablero tablero,Pieza rey,List<Pieza> piezasEnemigas){
-        for(Pieza pieza: piezasEnemigas){
-            if (pieza.validarMovimiento(tablero, pieza.getFila(), pieza.getColumna(), rey.getFila(), rey.getColumna())){
-                
-            }
-        }
-    }
-
-    public void verificarMovimiento(ActionEvent event, int filaOriginal, int columnaOriginal,int filaDestino, int columnaDestino) throws Exception {
-        Optional<Pieza> piezaOptDestino = getTablero().getPieza(filaDestino, columnaDestino);
+    public void verificarMovimientoEspecial(int filaOriginal, int columnaOriginal,int filaDestino, int columnaDestino) throws Exception {
         Optional<Pieza> piezaOptOrigen = getTablero().getPieza(filaOriginal, columnaOriginal);
-        boolean hayHackeMate = false;
-        if (piezaOptDestino.isPresent()) {
-            Pieza piezaAComer = piezaOptDestino.get();
-            hayHackeMate = chequearHackeMate(event, piezaAComer);
+        this.coronacion = movimientosEspeciales.chequearMovimientoEspecial(filaOriginal, columnaOriginal, filaDestino, columnaDestino);
+        if(piezaOptOrigen.get().getTipo() == TipoPieza.TORRE){
+            Torre pieza = (Torre) piezaOptOrigen.get();
+            pieza.marcarComoMovido();
         }
-        if(hayHackeMate == false){
-            this.coronacion = movimientosEspeciales.chequearMovimientoEspecial(filaOriginal, columnaOriginal, filaDestino, columnaDestino);
-            if(piezaOptOrigen.get().getTipo() == TipoPieza.TORRE){
-                Torre pieza = (Torre) piezaOptOrigen.get();
-                pieza.marcarComoMovido();
-            }
-        }
-    }
-
-
-    public boolean chequearHackeMate(ActionEvent event, Pieza piezaAComer) throws Exception {
-        boolean hayHackeMate = false;
-        if(piezaAComer.getTipo() == TipoPieza.REY){
-            hayHackeMate = true;
-            String mensaje = "  WIN BLANCAS  ";
-            if(juego.getColorJugadorTurnoActual() == Color.NEGRO ){
-                mensaje = "  WIN NEGRAS  ";
-            }
-            VentanaController ventanaController = new VentanaController();
-            ventanaController.reutilizarVentanaInicial(event, mensaje, jugadorBlancas);
-        }
-        return hayHackeMate;
     }
 
 
@@ -301,10 +261,7 @@ public class TableroController {
         }
 
         imagenPiezaSeleccionada = vistaImagen;
-        //System.out.println(efectoSeleccionado);
-        //System.out.println(protection);
         resaltarCasillas(piezaSeleccionada, filaOriginal, columnaOriginal, true);
-        //System.out.println("ACÁ ESTÁ EL ERROR");
         desplazamientoX = eventoMouse.getSceneX() - vistaImagen.getTranslateX();
         desplazamientoY = eventoMouse.getSceneY() - vistaImagen.getTranslateY();
         vistaImagen.setMouseTransparent(true);  // Evita que se reciban eventos de mouse mientras se arrastra
@@ -336,31 +293,50 @@ public class TableroController {
 
     public void alSoltarMouse(ImageView vistaImagen, int filaOriginal, int columnaOriginal) throws Exception {
         vistaImagen.setMouseTransparent(false);
-
         // Calcula la nueva fila y columna según las coordenadas del mouse
         int nuevaColumna = (int) Math.round((vistaImagen.getLayoutX() + vistaImagen.getTranslateX()) / 90);
         int nuevaFila = (int) Math.round((vistaImagen.getLayoutY() + vistaImagen.getTranslateY()) / 90);
+
         // Validar que la posición esté dentro de los límites del tablero
         if (!this.juego.movimientoInvalido(filaOriginal, columnaOriginal, nuevaFila, nuevaColumna)) {
-            verificarMovimiento(null, filaOriginal, columnaOriginal,nuevaFila, nuevaColumna);
-            //mueve Pieza en tablero view y en modelo
+            verificarMovimientoEspecial( filaOriginal, columnaOriginal, nuevaFila, nuevaColumna);
+
+            // Realizar el movimiento en el modelo
+            getTablero().moverPieza(filaOriginal, columnaOriginal, nuevaFila, nuevaColumna);
+            // Realizar el movimiento en la vista
             tableroView.moverPieza(vistaImagen, filaOriginal, columnaOriginal, nuevaFila, nuevaColumna);
-            buscarHacke(getTablero());
+
+            // Obtén el color del jugador contrario
+            Color color = getTablero().getPieza(nuevaFila, nuevaColumna).get().getColor();
+            Color colorEnemigo = (color == Color.BLANCO) ? Color.NEGRO : Color.BLANCO;
+
+            // Verificar si es jaque mate después de realizar el movimiento
+            if (esJaqueMate(getTablero(), colorEnemigo)) {
+                terminarJacqueMate(null, juego.getColorJugadorTurnoActual());
+            }
             resetearSoltarMouse(vistaImagen, nuevaFila, nuevaColumna);
+
             if (!coronacion) {
                 cambiarTurnos();
             }
-            //efectoSeleccionado = false;
-            //protection = false;
-            //freezar = false;
-            //volar  = false;
-
         }
+
         vistaImagen.setTranslateX(0);
         vistaImagen.setTranslateY(0);
         desresaltarCasillas(filaOriginal, columnaOriginal);
         imagenPiezaSeleccionada = null;
     }
+
+    public void terminarJacqueMate(ActionEvent event, Color color) throws Exception {
+
+
+        String mensaje = (color == Color.BLANCO) ? "  WIN BLANCAS  " : "  WIN NEGRAS  ";
+
+        VentanaController ventanaController = new VentanaController();
+        ventanaController.reutilizarVentanaInicial(event, mensaje, jugadorBlancas);
+    }
+
+
 
     public void setearEventos(PiezaView piezaView, int filaFinal, int columnaFinal) {
         // Agregar manejadores de eventos del mouse
@@ -503,5 +479,49 @@ public class TableroController {
             congeladorJugadorBlancas.setDisable(true);
         }
     }
-}
 
+    public boolean esJaqueMate(Tablero tablero, Color color) {
+        // Verifica si el rey del color especificado está en jaque
+        if (!AdministradorDeMovimientos.hayJaque(tablero, color)) {
+            return false; // No está en jaque, por lo tanto no es jaque mate
+        }
+
+        // Crea una copia de las piezas del tablero para evitar modificaciones concurrentes
+        List<Pieza> piezasJugador = new ArrayList<>(tablero.getPiezas());
+
+        // Recorre todas las piezas del color que está en jaque
+        for (Pieza pieza : piezasJugador) {
+            if (pieza.getColor() == color) {
+                int filaOriginal = pieza.getFila();
+                int columnaOriginal = pieza.getColumna();
+
+                // Obtiene todos los movimientos válidos de la pieza
+                List<int[]> movimientosPosibles = obtenerPosicionesValidas(pieza, filaOriginal, columnaOriginal);
+                for (int[] movimiento : movimientosPosibles) {
+                    int filaDestino = movimiento[0];
+                    int columnaDestino = movimiento[1];
+
+                    // Simula el movimiento temporalmente
+                    Optional<Pieza> piezaDestinoOpt = tablero.getPieza(filaDestino, columnaDestino);
+                    tablero.eliminarPieza(filaDestino, columnaDestino);
+                    tablero.moverPieza(filaOriginal, columnaOriginal, filaDestino, columnaDestino);
+
+                    // Verifica si el movimiento elimina el jaque
+                    boolean sigueEnJaque = AdministradorDeMovimientos.hayJaque(tablero, color);
+
+                    // Revierte el movimiento
+                    tablero.moverPieza(filaDestino, columnaDestino, filaOriginal, columnaOriginal);
+                    piezaDestinoOpt.ifPresent(p -> tablero.agregarPieza(p, filaDestino, columnaDestino));
+
+                    // Si algún movimiento posible elimina el jaque, no es jaque mate
+                    if (!sigueEnJaque) {
+                        return false;
+                    }
+                }
+            }
+        }
+        // Si todos los movimientos posibles siguen en jaque, es jaque mate
+        return true;
+    }
+
+}

@@ -69,26 +69,6 @@ public class Torre extends Pieza {
             }
         }
 
-
-        // Verificación del enroque
-        /*if (idiff == 0 && jdiff == 2) { // Enroque
-            int columnaRey = 4;
-            int columnaTorre = (dj - oj) > 0 ? 7 : 0; // Enroque corto: torre en 7, largo: torre en 0
-
-            Optional<Pieza> rey = tablero.getPieza(oi, columnaRey);
-            Optional<Pieza> torre = tablero.getPieza(oi, columnaTorre);
-
-            if(rey.isPresent() && torre.isPresent()){
-                if (rey.get().getTipo() == TipoPieza.REY &&
-                        torre.get().getTipo() == TipoPieza.TORRE && !((Torre) torre.get()).haMovido()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-        }*/
-
         // Verificar si hay una pieza en la posición destino
         if (tablero.estaOcupada(di, dj)) {
             Pieza piezaDestino = tablero.getPieza(di, dj).get();
