@@ -9,6 +9,7 @@ import org.ajedrez.model.Efectos.TipoEfecto;
  */
 public class Rey extends Pieza {
     private boolean haMovido; // Estado para verificar si el rey se ha movido
+    private boolean hayjaque; // Estado para verificar si el rey está en jaque
 
     /**
      * Constructor de la clase Rey.
@@ -20,6 +21,7 @@ public class Rey extends Pieza {
     public Rey(Color color, int fila, int columna) {
         super(color, fila, columna);
         this.haMovido = false; // Inicialmente, el rey no se ha movido
+        this.hayjaque = false; // Inicialmente, el rey no está en jaque
     }
 
     /**
@@ -43,6 +45,7 @@ public class Rey extends Pieza {
         int idiff = Math.abs(oi - di);
         int jdiff = Math.abs(oj - dj);
 
+
         // Movimiento normal del rey o enroque
         if (((idiff <= 1 && jdiff <= 1) && !(idiff == 0 && jdiff == 0)) || (oj == 4 && (idiff == 0) && (oi == 0 || oi == 7) && (dj == 2 || dj == 6))) {
             // Validación de enroque
@@ -52,7 +55,7 @@ public class Rey extends Pieza {
 
                 if (piezaOpt.isPresent() && piezaOpt.get().getTipo() == TipoPieza.TORRE) {
                     Torre torre = (Torre) piezaOpt.get();
-                    if (torre.haMovido() || haMovido()) {
+                    if ((torre.haMovido() || haMovido()) || hayjaque || (torre.isefectoactivo() && (torre.getEfecto().getTipo() == TipoEfecto.FREEZE))) {
                         return false; // La torre ya se ha movido o el rey no puede moverse
                     }
                 } else {
@@ -60,7 +63,7 @@ public class Rey extends Pieza {
                 }
 
                 // Verificar que el camino está libre
-                int iniciocol = Math.min(oj, dj) + 1;
+                int iniciocol = Math.min(oj, dj) - 1;
                 int fincol = Math.max(oj, dj);
                 boolean caminoLibre = IntStream.range(iniciocol, fincol)
                         .allMatch(col -> !tablero.estaOcupada(oi, col));
@@ -92,6 +95,17 @@ public class Rey extends Pieza {
      */
     public void marcarComoMovido() {
         this.haMovido = true; // Cambia el estado de haMovido a true
+    }
+
+    //
+    // Marca el rey en jaque.
+    //
+    public void setJaque(boolean booleano){
+        this.hayjaque = booleano; // Cambia el estado hayJaque a true
+    }
+
+    public boolean getJaque(){
+        return this.hayjaque;
     }
 
     /**

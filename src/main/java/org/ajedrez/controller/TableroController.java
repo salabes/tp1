@@ -173,6 +173,39 @@ public class TableroController {
         }
     }
 
+    public void verificarAmenazas(int filaDestino, int columnaDestino) throws Exception {
+        // Obtén el color del jugador contrario
+        Pieza piezaMovida = getTablero().getPieza(filaDestino, columnaDestino).get();
+        Color color = piezaMovida.getColor();
+        Color colorEnemigo = (color == Color.BLANCO) ? Color.NEGRO : Color.BLANCO;
+        boolean hayJaque = AdministradorDeMovimientos.hayJaque(getTablero(), colorEnemigo);
+        if (hayJaque) {
+            Pieza piezaReyEnemigo = getTablero().getReyNegras();
+            Rey reyEnemigo = (Rey) piezaReyEnemigo;
+            if(colorEnemigo == Color.BLANCO) {
+                piezaReyEnemigo = getTablero().getReyBlancas();
+                reyEnemigo = (Rey)  piezaReyEnemigo;
+            }
+            tableroView.resaltarCasilla(piezaReyEnemigo.getFila(), piezaReyEnemigo.getColumna(), true);
+            reyEnemigo.setJaque(true);
+            if (esJaqueMate(getTablero(), colorEnemigo)) {
+                terminarJacqueMate(null, juego.getColorJugadorTurnoActual());
+            }
+
+        }
+        else{
+            Rey reyEnemigo =(Rey) getTablero().getReyNegras();
+            if( colorEnemigo == Color.BLANCO){
+                reyEnemigo = (Rey) getTablero().getReyBlancas();
+            }
+            reyEnemigo.setJaque(false);
+        }
+
+        // Verificar si es jaque mate después de realizar el movimiento
+        //if (esJaqueMate(getTablero(), colorEnemigo)) {
+        //    terminarJacqueMate(null, juego.getColorJugadorTurnoActual());
+        //}
+    }
 
     public void congelarRival(Color colorJugador) {
         if (juego.getColorJugadorTurnoActual() == colorJugador) {
@@ -245,7 +278,7 @@ public class TableroController {
      * @param vistaImagen La imagen de la pieza que fue presionada.
      */
 
-    public void alPresionarConMouse(MouseEvent eventoMouse, ImageView vistaImagen) {
+    public void alPresionarConMouse(MouseEvent eventoMouse, ImageView vistaImagen) throws Exception {
         // Obtiene la fila y columna originales de la pieza seleccionada
         int filaOriginal = GridPane.getRowIndex(vistaImagen);
         int columnaOriginal = GridPane.getColumnIndex(vistaImagen);
@@ -261,7 +294,7 @@ public class TableroController {
         }
 
         imagenPiezaSeleccionada = vistaImagen;
-        resaltarCasillas(piezaSeleccionada, filaOriginal, columnaOriginal, true);
+        resaltarCasillas(piezaSeleccionada, filaOriginal, columnaOriginal);
         desplazamientoX = eventoMouse.getSceneX() - vistaImagen.getTranslateX();
         desplazamientoY = eventoMouse.getSceneY() - vistaImagen.getTranslateY();
         vistaImagen.setMouseTransparent(true);  // Evita que se reciban eventos de mouse mientras se arrastra
@@ -296,31 +329,19 @@ public class TableroController {
         // Calcula la nueva fila y columna según las coordenadas del mouse
         int nuevaColumna = (int) Math.round((vistaImagen.getLayoutX() + vistaImagen.getTranslateX()) / 90);
         int nuevaFila = (int) Math.round((vistaImagen.getLayoutY() + vistaImagen.getTranslateY()) / 90);
-
-        // Validar que la posición esté dentro de los límites del tablero
         if (!this.juego.movimientoInvalido(filaOriginal, columnaOriginal, nuevaFila, nuevaColumna)) {
-            verificarMovimientoEspecial( filaOriginal, columnaOriginal, nuevaFila, nuevaColumna);
-
+            verificarMovimientoEspecial(filaOriginal, columnaOriginal, nuevaFila, nuevaColumna);
             // Realizar el movimiento en el modelo
             getTablero().moverPieza(filaOriginal, columnaOriginal, nuevaFila, nuevaColumna);
             // Realizar el movimiento en la vista
             tableroView.moverPieza(vistaImagen, filaOriginal, columnaOriginal, nuevaFila, nuevaColumna);
-
-            // Obtén el color del jugador contrario
-            Color color = getTablero().getPieza(nuevaFila, nuevaColumna).get().getColor();
-            Color colorEnemigo = (color == Color.BLANCO) ? Color.NEGRO : Color.BLANCO;
-
-            // Verificar si es jaque mate después de realizar el movimiento
-            if (esJaqueMate(getTablero(), colorEnemigo)) {
-                terminarJacqueMate(null, juego.getColorJugadorTurnoActual());
-            }
+            //Verificar si hay jaque o jaque-mate
+            verificarAmenazas(nuevaFila, nuevaColumna);
             resetearSoltarMouse(vistaImagen, nuevaFila, nuevaColumna);
-
             if (!coronacion) {
                 cambiarTurnos();
             }
         }
-
         vistaImagen.setTranslateX(0);
         vistaImagen.setTranslateY(0);
         desresaltarCasillas(filaOriginal, columnaOriginal);
@@ -328,16 +349,28 @@ public class TableroController {
     }
 
     public void terminarJacqueMate(ActionEvent event, Color color) throws Exception {
+
+
         String mensaje = (color == Color.BLANCO) ? "  WIN BLANCAS  " : "  WIN NEGRAS  ";
 
         VentanaController ventanaController = new VentanaController();
         ventanaController.reutilizarVentanaInicial(event, mensaje, jugadorBlancas);
     }
 
+
+
     public void setearEventos(PiezaView piezaView, int filaFinal, int columnaFinal) {
         // Agregar manejadores de eventos del mouse
         ImageView vistaImagen = piezaView.getVistaPieza();
-        vistaImagen.setOnMousePressed(eventoMouse -> alPresionarConMouse(eventoMouse, vistaImagen));
+        vistaImagen.setOnMousePressed(eventoMouse -> {
+            try {
+                alPresionarConMouse(eventoMouse, vistaImagen);
+            } catch (Exception e) {
+                // Manejar la excepción localmente
+                System.err.println("Error al soltar el mouse: " + e.getMessage());
+                // Puedes mostrar un mensaje al usuario o registrar el error
+            }
+        });
         vistaImagen.setOnMouseDragged(eventoMouse -> alArrastrarConMouse(eventoMouse, vistaImagen));
         vistaImagen.setOnMouseReleased(eventoMouse -> {
             try {
@@ -382,8 +415,8 @@ public class TableroController {
     }
 
 
-    private void resaltarCasillas(Pieza piezaSeleccionada, int filaOriginal, int columnaOriginal, boolean resaltar) {
-        List<int[]> posicionesValidas = obtenerPosicionesValidas(piezaSeleccionada, filaOriginal, columnaOriginal);
+    private void resaltarCasillas(Pieza piezaSeleccionada, int filaOriginal, int columnaOriginal) {
+        List<int[]> posicionesValidas = obtenerPosicionesValidas(piezaSeleccionada);
         tableroView.resaltarCasilla(filaOriginal, columnaOriginal, true);//Casilla seleccionada
         // Resalta las casillas válidas a las que se puede mover
         for (int[] posicion : posicionesValidas) {
@@ -406,19 +439,17 @@ public class TableroController {
         casillasResaltadas.clear();
     }
 
-    private List<int[]> obtenerPosicionesValidas(Pieza pieza, int filaOriginal, int columnaOriginal) {
+    private List<int[]> obtenerPosicionesValidas(Pieza pieza) {
         List<int[]> posicionesValidas = new ArrayList<>();
 
         // Lógica para obtener las posiciones válidas, dependiendo de la pieza seleccionada
-        // Supongamos que cada Pieza tiene un método validarMovimiento(filaDestino, columnaDestino)
         for (int fila = 0; fila < 8; fila++) {
             for (int columna = 0; columna < 8; columna++) {
-                if (pieza.validarMovimiento(getTablero(), filaOriginal, columnaOriginal, fila, columna)) {
+                if (!juego.movimientoInvalido(pieza.getFila(), pieza.getColumna(), fila, columna)) {
                     posicionesValidas.add(new int[]{fila, columna});  // Añade la posición válida
                 }
             }
         }
-
         return posicionesValidas;
     }
 
@@ -432,7 +463,7 @@ public class TableroController {
         });
     }
 
-    private void aplicarEfecto(Pieza pieza,ImageView vistaImagen){
+    private void aplicarEfecto(Pieza pieza,ImageView vistaImagen) throws Exception {
         if(freezar){
             if((pieza.getColor() != juego.getColorJugadorTurnoActual()) && pieza.getTipo() != TipoPieza.REY){
                 efectoController.aplicarEfecto(vistaImagen,pieza);
@@ -453,6 +484,7 @@ public class TableroController {
 
                 if(volar){
                     desactivarBotones(pieza,volarJugadorBlancas,volarJugadorNegras);
+                    cambiarTurnos();
                 }
             }
             protection = false;
@@ -476,15 +508,18 @@ public class TableroController {
         }
     }
 
+    //public boolean getJaque(){
+    //    return  hayjaque;
+    //}
+
     public boolean esJaqueMate(Tablero tablero, Color color) {
         // Verifica si el rey del color especificado está en jaque
-        if (!AdministradorDeMovimientos.hayJaque(tablero, color)) {
-            return false; // No está en jaque, por lo tanto no es jaque mate
-        }
+        //if (!AdministradorDeMovimientos.hayJaque(tablero, color)) {
+        //    return false; // No está en jaque, por lo tanto no es jaque mate
+        //}
 
         // Crea una copia de las piezas del tablero para evitar modificaciones concurrentes
         List<Pieza> piezasJugador = new ArrayList<>(tablero.getPiezas());
-
         // Recorre todas las piezas del color que está en jaque
         for (Pieza pieza : piezasJugador) {
             if (pieza.getColor() == color) {
@@ -492,7 +527,7 @@ public class TableroController {
                 int columnaOriginal = pieza.getColumna();
 
                 // Obtiene todos los movimientos válidos de la pieza
-                List<int[]> movimientosPosibles = obtenerPosicionesValidas(pieza, filaOriginal, columnaOriginal);
+                List<int[]> movimientosPosibles = obtenerPosicionesValidas(pieza);
                 for (int[] movimiento : movimientosPosibles) {
                     int filaDestino = movimiento[0];
                     int columnaDestino = movimiento[1];

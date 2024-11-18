@@ -42,8 +42,6 @@ public class EfectoController {
      * @param pieza La pieza sobre la que se aplicará el efecto.
      */
     public void aplicarEfecto(ImageView vistaImagen, Pieza pieza) {
-        //if (pieza.getTipo() != "rey") {
-
         // Asigna el efecto a la pieza
         pieza.setEfecto(efectoElejido);
         // Activa el efecto en la pieza

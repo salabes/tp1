@@ -82,27 +82,6 @@ public class MovimientosEspecialesController {
         return huboCoronacion;
     }
 
-    /**
-     * Verifica si hay una pieza en la posición de destino y la elimina si es necesario.
-     * Además, mueve la pieza comida al área correspondiente de piezas eliminadas.
-     * @param tablero El tablero donde se encuentra la pieza.
-     */
-/*     public void chequearPiezaComida(Tablero tablero){
-        Optional<Pieza> piezaDestinoOpt = tablero.getPieza(this.filaDestino, this.columnaDestino);
-
-        if (piezaDestinoOpt.isPresent()) {
-            Pieza pieza = piezaDestinoOpt.get();
-            // Elimina la pieza de la vista
-            movimientosEspecialesView.comerPieza(tablero,pieza,this.filaDestino,this.columnaDestino);
-
-            // Elimina la pieza del modelo
-            tablero.eliminarPieza(this.filaDestino,this.columnaDestino);
-
-            // Agrega la pieza eliminada al área correspondiente en la vista
-            PiezaView piezaView = new PiezaView(pieza.getImagen());
-            tableroController.getPiezasEliminadasController().agregarPiezaEliminadaAGridPane(piezaView.getVistaPieza(),pieza.getColor());
-        }
-    } */
     public void chequearPiezaComida(Tablero tablero) {
         Optional<Pieza> piezaDestinoOpt = tablero.getPieza(this.filaDestino, this.columnaDestino);
     

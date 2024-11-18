@@ -27,7 +27,7 @@ end
 deactivate MovimientosEspecialesController
 TableroController -> TableroView: moverPieza(rey, nuevaFila, nuevaColumna)
 activate TableroView
-TableroView -> Tablero: moverPieza(filaOrigen, columnaOrigen, filaDestino, columnaDestino)
+TableroController -> Tablero: moverPieza(filaOrigen, columnaOrigen, filaDestino, columnaDestino)
 deactivate TableroView
 activate Tablero
 @enduml

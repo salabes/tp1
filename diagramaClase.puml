@@ -54,6 +54,7 @@ package "Model"{
         + eliminarPieza(fila: int, columna: int)
         + getCantPiezas(): int
         + getPiezas(): ArrayList<Pieza>
+        + getRey(Color color): Rey
     }
 
     class Casillero {
@@ -156,10 +157,13 @@ package "Model"{
 
     class Rey extends Pieza {
         - boolean haMovido
+        - boolean hayJaque
         + validarMovimiento(tablero: Tablero, oi: int, oj: int, di: int, dj: int): boolean
         + marcarComoMovido()
         + haMovido(): boolean
         + getTipo(): TipoPieza
+        + hayJaque(): void
+        + sacarJaque(): void
     }
 
     class Torre extends Pieza {

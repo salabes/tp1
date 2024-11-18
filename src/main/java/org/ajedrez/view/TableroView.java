@@ -101,6 +101,14 @@ public class TableroView {
         }
     }
 
+/*     public PiezaView reemplazarPiezaView(Pieza pieza, Pieza nuevaPieza, int fila, int columna) {
+        eliminarPiezaView(pieza);
+        PiezaView piezaView = new PiezaView(nuevaPieza.getImagen());
+        agregarPiezaView(piezaView, nuevaPieza, fila, columna);
+
+        return piezaView;
+    } */
+
     public PiezaView reemplazarPiezaView(Pieza pieza, Pieza nuevaPieza, int fila, int columna) {
         eliminarPiezaView(pieza);
         PiezaView nuevaPiezaView = crearPiezaView(nuevaPieza); // Usa el método helper
@@ -126,7 +134,25 @@ public class TableroView {
                 throw new IllegalArgumentException("Tipo de pieza desconocido: " + pieza.getTipo());
         }
     }
-
+    
+    
+/* 
+    // Metodo para cargar las piezas el tablero visual
+    public void inicializarPiezas(TableroController controller) {
+        for (int fila = 0; fila < 8; fila++) {
+            for (int columna = 0; columna < 8; columna++) {
+                final int filaFinal = fila;
+                final int columnaFinal = columna;
+                Boolean present = this.tablero.getPieza(filaFinal, columnaFinal).isPresent();
+                if (present) {
+                    Pieza pieza = this.tablero.getPieza(filaFinal, columnaFinal).get();
+                    PiezaView piezaView = new PiezaView(pieza.getImagen());
+                    agregarPiezaView(piezaView, pieza, filaFinal, columnaFinal);
+                    controller.setearEventos(piezaView, filaFinal, columnaFinal);
+                }
+            }
+        }
+    } */
     public void inicializarPiezas(TableroController controller) {
         for (int fila = 0; fila < 8; fila++) {
             for (int columna = 0; columna < 8; columna++) {

@@ -23,7 +23,7 @@ public class Volar extends Efecto {
      */
     @Override
     public void setCantidadTurnosActivos() {
-        this.cantidadTurnosActivos = 1; // Establece la cantidad de turnos activos para el efecto Volar.
+        this.cantidadTurnosActivos = 3; // Establece la cantidad de turnos activos para el efecto Volar.
     }
 
     /**

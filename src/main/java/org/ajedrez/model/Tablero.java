@@ -180,6 +180,27 @@ public class Tablero {
         return piezas; // Devuelve la lista de piezas
     }
 
+    public Pieza getReyBlancas(){
+        Pieza reyBlancas = null;
+        ArrayList<Pieza> piezas = getPiezas();
+        for (Pieza pieza : piezas){
+            if(pieza.getTipo() == TipoPieza.REY && (pieza.getColor() == Color.BLANCO)){
+                reyBlancas = pieza;
+            }
+        }
+        return reyBlancas; // Devuelve la lista de pieza Blanca
+    }
+
+    public Pieza getReyNegras(){
+        Pieza reyNegras = null;
+        ArrayList<Pieza> piezas = getPiezas();
+        for (Pieza pieza : piezas){
+            if(pieza.getTipo() == TipoPieza.REY && (pieza.getColor() == Color.NEGRO)){
+                reyNegras = pieza;
+            }
+        }
+        return reyNegras; // Devuelve la lista de pieza Blanca
+    }
 
 }
 

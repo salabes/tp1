@@ -21,11 +21,10 @@ public class AdministradorDeMovimientos {
      * @param columnaDestino Columna de la posición destino a la que se quiere mover la pieza.
      * @return true si el movimiento es inválido, false en caso contrario.
      */
-    public boolean movimientoInValido(Tablero tablero, int filaOriginal, int columnaOriginal, int filaDestino, int columnaDestino) {
+    public static boolean movimientoInValido(Tablero tablero, int filaOriginal, int columnaOriginal, int filaDestino, int columnaDestino) {
         // Obtiene la pieza en la posición original
         Optional<Pieza> piezaOpt = tablero.getPieza(filaOriginal, columnaOriginal);
-
-        if (!piezaOpt.isPresent()) return true; // No hay pieza en la posición original
+        Pieza piezaMovida = piezaOpt.get();
 
         // Verifica si hay una pieza en la posición destino y si está protegida
         if (tablero.getPieza(filaDestino, columnaDestino).isPresent()) {
@@ -37,12 +36,11 @@ public class AdministradorDeMovimientos {
 
         // Verifica los límites del tablero y si el movimiento de la pieza es válido
         if (columnaDestino < 0 || columnaDestino >= 8 || filaDestino < 0 || filaDestino >= 8 ||
-                !piezaOpt.get().validarMovimiento(tablero, filaOriginal, columnaOriginal, filaDestino, columnaDestino)) {
+                !piezaMovida.validarMovimiento(tablero, filaOriginal, columnaOriginal, filaDestino, columnaDestino)) {
             return true; // Movimiento inválido
         }
 
         // Simula el movimiento temporalmente en el tablero (incluyendo capturas)
-        Pieza piezaMovida = piezaOpt.get();
         Optional<Pieza> piezaDestinoOpt = tablero.getPieza(filaDestino, columnaDestino);
         tablero.eliminarPieza(filaDestino, columnaDestino);
         tablero.moverPieza(filaOriginal, columnaOriginal, filaDestino, columnaDestino);
@@ -68,6 +66,7 @@ public class AdministradorDeMovimientos {
                     Optional<Pieza> piezaOptDestino = tablero.getPieza(posicionFinal[0], posicionFinal[1]);
                     if (piezaOptDestino.isPresent() && piezaOptDestino.get().getColor() == color
                             && piezaOptDestino.get().getTipo() == TipoPieza.REY) {
+                        //piezaOptDestino
                         return true; // El rey del color está en jaque
                     }
                 }
@@ -76,14 +75,14 @@ public class AdministradorDeMovimientos {
         return false; // No hay jaque
     }
 
-    private static List<int[]> obtenerPosicionesValidas(Tablero tablero, Pieza pieza, int filaOriginal, int columnaOriginal) {
+    public static List<int[]> obtenerPosicionesValidas(Tablero tablero, Pieza pieza, int filaOriginal, int columnaOriginal) {
         List<int[]> posicionesValidas = new ArrayList<>();
 
         // Lógica para obtener las posiciones válidas, dependiendo de la pieza seleccionada
         // Supongamos que cada Pieza tiene un método validarMovimiento(filaDestino, columnaDestino)
         for (int fila = 0; fila < 8; fila++) {
             for (int columna = 0; columna < 8; columna++) {
-                if (pieza.validarMovimiento(tablero, filaOriginal, columnaOriginal, fila, columna)) {
+                if (pieza.validarMovimiento(tablero,filaOriginal, columnaOriginal, fila, columna)) {
                     posicionesValidas.add(new int[]{fila, columna});  // Añade la posición válida
                 }
             }

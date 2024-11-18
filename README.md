@@ -62,31 +62,47 @@ El proyecto cuenta con las siguientes dependencias incluidas en su archivo `pom.
 Si prefieres ejecutar el proyecto sin Maven y usas JavaFX instalado en tu sistema, asegúrate de configurar correctamente el `module-path` en IntelliJ:
 
 1. Ve a `Run > Edit Configurations`.
-2. En la sección de "VM Options", agrega las siguientes líneas, reemplazando `ruta/de/javafx` por la ruta donde está instalado JavaFX en tu sistema:
+2. Seleccionar el `+`(Add New Configuration, está parte superior izquierda) y cliquear en `Application`.
+3. Colocar el nombre(parte superior) que desee, en la ventana de la derecha.
+4. Debajo de `Build and Run` en `JDK` seleccionar su ruta correspondiente, ejemplo:
+```bash
+   java 21 C:\Program Files\Eclipse Adoptium\jdk-21.0.4.7-hotspot
+```
+5. En la sección de "VM Options", agrega las siguientes líneas, reemplazando `ruta/de/javafx` por la ruta donde está instalado JavaFX en tu sistema:
 
 ```bash
 --module-path "ruta/de/javafx" --add-modules=javafx.controls,javafx.fxml
 ```
+Ejemplo:
+```bash
+--module-path "C:\Program Files\Eclipse Adoptium\javafx-sdk-23\lib" --add-modules=javafx.controls,javafx.fxml -Dprism.allowhidpi=false
+```
+6. En la sección de `Main Class`, agregar:
+```bash
+org.ajedrez.Main
+```
+7. Clic en `Apply` y luego `OK`.
 
-Si experimentas problemas de tamaño de ventana en pantallas de alta resolución, puedes agregar la opción adicional:
+8. Si experimentas problemas de tamaño de ventana en pantallas de alta resolución, puedes quitar la opción adicional o cambiar a `true`:
 
 ```bash
--Dprism.allowhidpi=false
+-Dprism.allowhidpi=true
 ```
 
-## Compilación y ejecución
+### Compilación y ejecución desde IntelliJ
 
-### Usando Maven (recomendado)
-
-Para compilar y ejecutar el proyecto desde la terminal o desde IntelliJ usando Maven, ejecuta el siguiente comando:
+1. Con JavaFX(luego de las configuraciones indicadas anteriormente:
+-CLic en `Run(▷)`
+2. Con Maven:
+-Si ya configuraste Maven, también puedes hacer clic en "Execute Maven Goal" de Maven y clic en "mvn javafx:run".
+-Para compilar y ejecutar el proyecto desde la terminal o desde IntelliJ usando Maven, ejecuta el siguiente comando:
 
 ```bash
-mvn javafx:run
-```
-
-### Ejecutar desde IntelliJ
-
-Si prefieres ejecutar el proyecto directamente desde IntelliJ, simplemente haz clic en el botón "Run" después de configurar el `module-path` de JavaFX si es necesario. Si ya configuraste Maven, también puedes hacer clic en "Execute Maven Goal" de Maven y clic en "mvn javafx:run".
+   mvn javafx:run
+   ```
+En caso de experimentar problemas de con la imagen de la pantalla, hacer lo siguiente:
+- Acceda a Configuración -> Sistema -> Pantalla -> Escala y pruebe modificando el porcentaje(100%(recomendado) o 125%)).
+- Cierre todo y vuelva a abrir su IntelliJ IDEA, y elija vuelva a ejecutar con la opcíon que dese, para estos casos, con el comando Maven, bastaría).
 
 ## Instrucciones del Juego
 
@@ -122,7 +138,7 @@ Si prefieres ejecutar el proyecto directamente desde IntelliJ, simplemente haz c
      - **Tablas**
 
 5. **Final del Juego**:
-   Si uno de los jugadores se rinde, se acaba el tiempo del contador o se acuerdan tablas, la ventana del tablero se cerrará y se abrirá una ventana final con el mensaje correspondiente:
+   Si uno de los jugadores se rinde, se acaba el tiempo del contador, se acuerdan tablas o hay Jaque Mate, la ventana del tablero se cerrará y se abrirá una ventana final con el mensaje correspondiente:
    - "Ganaron las Blancas"
    - "Ganaron las Negras"
    - "Empate"
@@ -133,10 +149,10 @@ Si prefieres ejecutar el proyecto directamente desde IntelliJ, simplemente haz c
 
 ### Detalles Técnicos del Juego
 
-- Los poderes duran **4 turnos** en general, excepto el poder **Volar**, que solo se aplica mientras la pieza realiza el movimiento.
+- Los poderes duran **4 turnos** en general, excepto el poder **Volar**, que gasta un turno al aplicarlo, y no podrá ejecutarlo(volar con la pieza) hasta el siguiente turno, esto es necesario, ya que si se aplicara volar en torre o reina, estos matarían rápidamente si tienen al rey en su camino.
 - El jugador puede aplicar el poder a una pieza seleccionada haciendo clic en el botón del poder y luego en la pieza deseada.
 - El **resplandor** alrededor de la pieza indica que un poder ha sido aplicado.
-- Durante el turno de un jugador se puede mover la pieza y aplicar el poder que desea usar.
+- Durante el turno de un jugador se puede mover la pieza y aplicar el poder que desea usar(excepto volar).
 
 
 ## Contribuir al proyecto
